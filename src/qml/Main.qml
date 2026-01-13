@@ -105,6 +105,7 @@ Kirigami.ApplicationWindow {
         id: playlistDrawer
         edge: Qt.RightEdge
         modal: true
+        handleVisible: false
         width: Math.min(root.width * 0.85, 320)
 
         ColumnLayout {
@@ -124,7 +125,6 @@ Kirigami.ApplicationWindow {
 
                 Controls.ToolButton {
                     icon.name: "edit-clear-all"
-                    display: Controls.AbstractButton.IconOnly
                     text: i18n("Clear playlist")
                     onClicked: playlistModel.clear()
                     enabled: playlistModel.count > 0
@@ -155,7 +155,7 @@ Kirigami.ApplicationWindow {
                     highlighted: index === playlistModel.currentIndex
 
                     onClicked: {
-                        playlistModel.setCurrentIndex(index);
+                        playlistModel.currentIndex = index;
                         playTrack(playlistModel.urlAt(index));
                     }
 
@@ -257,7 +257,10 @@ Kirigami.ApplicationWindow {
                 visible: playlistModel.count === 0
                 spacing: Kirigami.Units.largeSpacing
 
-                Item { Layout.fillHeight: true }
+                Item {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                }
 
                 Kirigami.Icon {
                     Layout.alignment: Qt.AlignHCenter
@@ -281,7 +284,9 @@ Kirigami.ApplicationWindow {
                     onClicked: fileDialog.open()
                 }
 
-                Item { Layout.fillHeight: true }
+                Item {
+                    Layout.fillHeight: true
+                }
             }
         }
     }
@@ -306,7 +311,7 @@ Kirigami.ApplicationWindow {
                     // Repeat Off/All: get next track (handles wrapping for repeat all)
                     var nextIdx = playlistModel.nextIndex(shuffleEnabled, repeatMode);
                     if (nextIdx >= 0) {
-                        playlistModel.setCurrentIndex(nextIdx);
+                        playlistModel.currentIndex = nextIdx;
                         playTrack(playlistModel.urlAt(nextIdx));
                     } else {
                         // End of playlist (repeat off) - reset position
@@ -341,7 +346,7 @@ Kirigami.ApplicationWindow {
 
             // If playlist was empty, auto-play the first track
             if (wasEmpty && playlistModel.count > 0) {
-                playlistModel.setCurrentIndex(0);
+                playlistModel.currentIndex = 0;
                 playTrack(playlistModel.urlAt(0));
             }
         }
@@ -426,7 +431,7 @@ Kirigami.ApplicationWindow {
 
                         // If playlist was empty, auto-play the first track
                         if (wasEmpty && playlistModel.count > 0) {
-                            playlistModel.setCurrentIndex(0);
+                            playlistModel.currentIndex = 0;
                             playTrack(playlistModel.urlAt(0));
                         }
                     } else {
@@ -626,7 +631,7 @@ Kirigami.ApplicationWindow {
                         onClicked: {
                             var prevIdx = playlistModel.previousIndex();
                             if (prevIdx >= 0) {
-                                playlistModel.setCurrentIndex(prevIdx);
+                                playlistModel.currentIndex = prevIdx;
                                 playTrack(playlistModel.urlAt(prevIdx));
                             }
                         }
@@ -666,7 +671,7 @@ Kirigami.ApplicationWindow {
                         onClicked: {
                             var nextIdx = playlistModel.nextIndex(shuffleEnabled, repeatMode);
                             if (nextIdx >= 0) {
-                                playlistModel.setCurrentIndex(nextIdx);
+                                playlistModel.currentIndex = nextIdx;
                                 playTrack(playlistModel.urlAt(nextIdx));
                             }
                         }
