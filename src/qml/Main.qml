@@ -218,7 +218,7 @@ Kirigami.ApplicationWindow {
                             anchors.fill: parent
                             anchors.margins: 1
                             source: audioPlayer.albumArtPath
-                            fillMode: Image.PreserveAspectFit
+                            fillMode: Image.PreserveAspectCrop
                             visible: audioPlayer.albumArtPath !== ""
                         }
 
