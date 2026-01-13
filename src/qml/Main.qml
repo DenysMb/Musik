@@ -234,17 +234,14 @@ Kirigami.ApplicationWindow {
                                         if (wasPlaying) {
                                             playTrack(nextUrl);
                                         } else {
-                                            // Just load without playing
-                                            root.currentTrackUrl = nextUrl;
-                                            audioPlayer.loadTrack(nextUrl);
+                                            // Just load metadata without playing
+                                            audioPlayer.loadFile(nextUrl);
                                         }
                                     } else {
-                                        // Playlist is now empty - stop playback
+                                        // Playlist is now empty - stop playback and clear metadata
                                         mediaPlayer.stop();
-                                        root.currentTrackUrl = "";
-                                        root.currentTrackTitle = "";
-                                        root.currentTrackArtist = "";
-                                        root.currentAlbumArt = "";
+                                        mediaPlayer.source = "";
+                                        audioPlayer.clearMetadata();
                                     }
                                 }
                             }
