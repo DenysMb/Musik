@@ -8,6 +8,8 @@ ecm_add_qml_module(musik
 target_sources(musik
     PRIVATE
     main.cpp
+    audioplayer.cpp
+    audioplayer.h
 )
 
 ecm_target_qml_sources(musik

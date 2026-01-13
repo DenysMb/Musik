@@ -1,7 +1,9 @@
 [Desktop Entry]
 Name=Musik
+GenericName=Audio Player
+Comment=A simple audio player
 Exec=musik
-Icon=kde
+Icon=multimedia-player
 Type=Application
 Terminal=false
-Categories=Utility
+Categories=AudioVideo;Player;Audio;Qt;KDE;
