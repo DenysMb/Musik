@@ -22,8 +22,7 @@ int main(int argc, char *argv[])
     }
 
     QQmlApplicationEngine engine;
-    QQmlContext ctx(&engine);
-    ctx.setContextObject(new KLocalizedContext(&engine));
+    engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
 
     engine.loadFromModule("io.github.denysmb.musik", "Main");
 

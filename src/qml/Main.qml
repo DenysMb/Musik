@@ -22,18 +22,19 @@ Kirigami.ApplicationWindow {
 
     // Time formatting helper function
     function formatTime(ms) {
-        if (ms <= 0) return "0:00"
-        var totalSeconds = Math.floor(ms / 1000)
-        var minutes = Math.floor(totalSeconds / 60)
-        var seconds = totalSeconds % 60
-        return minutes + ":" + (seconds < 10 ? "0" : "") + seconds
+        if (ms <= 0)
+            return "0:00";
+        var totalSeconds = Math.floor(ms / 1000);
+        var minutes = Math.floor(totalSeconds / 60);
+        var seconds = totalSeconds % 60;
+        return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
     }
 
     // Show error notification
     function showError(message) {
-        errorMessage.text = message
-        errorMessage.visible = true
-        errorHideTimer.restart()
+        errorMessage.text = message;
+        errorMessage.visible = true;
+        errorHideTimer.restart();
     }
 
     // Timer for auto-hiding error messages
@@ -47,8 +48,8 @@ Kirigami.ApplicationWindow {
     AudioPlayer {
         id: audioPlayer
 
-        onErrorOccurred: function(message) {
-            showError(message)
+        onErrorOccurred: function (message) {
+            showError(message);
         }
     }
 
@@ -60,13 +61,13 @@ Kirigami.ApplicationWindow {
         onPlaybackStateChanged: {
             // Stop and reset when track ends
             if (mediaPlayer.playbackState === MediaPlayer.StoppedState && mediaPlayer.position >= mediaPlayer.duration - 100 && mediaPlayer.duration > 0) {
-                mediaPlayer.position = 0
+                mediaPlayer.position = 0;
             }
         }
 
-        onErrorOccurred: function(error, errorString) {
+        onErrorOccurred: function (error, errorString) {
             if (error !== MediaPlayer.NoError) {
-                showError(i18n("Playback error: %1", errorString))
+                showError(i18n("Playback error: %1", errorString));
             }
         }
     }
@@ -75,24 +76,30 @@ Kirigami.ApplicationWindow {
     FileDialog {
         id: fileDialog
         title: i18n("Open Audio File")
-        nameFilters: [
-            i18n("Audio Files") + " (*.mp3 *.flac *.ogg *.wav *.m4a *.aac *.wma *.opus)",
-            i18n("All Files") + " (*)"
-        ]
+        fileMode: FileDialog.OpenFile
+        nameFilters: [i18n("Audio Files") + " (*.mp3 *.flac *.ogg *.wav *.m4a *.aac *.wma *.opus)", i18n("All Files") + " (*)"]
         onAccepted: {
-            audioPlayer.loadFile(selectedFile)
-            mediaPlayer.source = selectedFile
-            mediaPlayer.play()
+            audioPlayer.loadFile(selectedFile);
+            mediaPlayer.source = selectedFile;
+            mediaPlayer.play();
         }
     }
 
-    // Main content - no pageStack for fixed layout
+    // Main content
     pageStack.initialPage: Kirigami.Page {
         id: mainPage
 
-        // Disable default Kirigami page features
-        globalToolBarStyle: Kirigami.ApplicationHeaderStyle.None
+        title: i18nc("@title:window", "Musik")
         padding: Kirigami.Units.largeSpacing
+
+        // Open action in the header toolbar
+        actions: [
+            Kirigami.Action {
+                text: i18n("Open")
+                icon.name: "document-open"
+                onTriggered: fileDialog.open()
+            }
+        ]
 
         ColumnLayout {
             anchors.fill: parent
@@ -155,14 +162,14 @@ Kirigami.ApplicationWindow {
                     Layout.fillWidth: true
                     text: {
                         if (!audioPlayer.hasMetadata && mediaPlayer.source.toString() === "") {
-                            return ""
+                            return "";
                         }
-                        var artist = audioPlayer.hasMetadata ? audioPlayer.artist : i18n("Unknown Artist")
-                        var album = audioPlayer.hasMetadata && audioPlayer.album !== "" ? audioPlayer.album : ""
+                        var artist = audioPlayer.hasMetadata ? audioPlayer.artist : i18n("Unknown Artist");
+                        var album = audioPlayer.hasMetadata && audioPlayer.album !== "" ? audioPlayer.album : "";
                         if (album !== "") {
-                            return artist + " - " + album
+                            return artist + " - " + album;
                         }
-                        return artist
+                        return artist;
                     }
                     color: Kirigami.Theme.disabledTextColor
                     horizontalAlignment: Text.AlignHCenter
@@ -189,7 +196,7 @@ Kirigami.ApplicationWindow {
                     enabled: mediaPlayer.duration > 0
 
                     onMoved: {
-                        mediaPlayer.position = value
+                        mediaPlayer.position = value;
                     }
                 }
 
@@ -224,7 +231,7 @@ Kirigami.ApplicationWindow {
 
                 onVisibleChanged: {
                     if (!visible) {
-                        errorHideTimer.stop()
+                        errorHideTimer.stop();
                     }
                 }
             }
@@ -234,13 +241,6 @@ Kirigami.ApplicationWindow {
                 Layout.alignment: Qt.AlignHCenter
                 spacing: Kirigami.Units.largeSpacing
 
-                // Open Button
-                Controls.Button {
-                    icon.name: "document-open"
-                    text: i18n("Open")
-                    onClicked: fileDialog.open()
-                }
-
                 // Play/Pause Button
                 Controls.Button {
                     icon.name: mediaPlayer.playbackState === MediaPlayer.PlayingState ? "media-playback-pause" : "media-playback-start"
@@ -248,9 +248,9 @@ Kirigami.ApplicationWindow {
                     enabled: mediaPlayer.source.toString() !== ""
                     onClicked: {
                         if (mediaPlayer.playbackState === MediaPlayer.PlayingState) {
-                            mediaPlayer.pause()
+                            mediaPlayer.pause();
                         } else {
-                            mediaPlayer.play()
+                            mediaPlayer.play();
                         }
                     }
                 }
@@ -261,8 +261,8 @@ Kirigami.ApplicationWindow {
                     text: i18n("Stop")
                     enabled: mediaPlayer.source.toString() !== ""
                     onClicked: {
-                        mediaPlayer.stop()
-                        mediaPlayer.position = 0
+                        mediaPlayer.stop();
+                        mediaPlayer.position = 0;
                     }
                 }
             }
