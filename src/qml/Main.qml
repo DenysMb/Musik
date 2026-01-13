@@ -45,6 +45,15 @@ Kirigami.ApplicationWindow {
         mediaPlayer.play();
     }
 
+    // Play a track from the playlist by URL
+    function playTrack(url) {
+        if (!url || url.toString() === "")
+            return;
+        audioPlayer.loadFile(url);
+        mediaPlayer.source = url;
+        mediaPlayer.play();
+    }
+
     // Time formatting helper function
     function formatTime(ms) {
         if (ms <= 0)
@@ -139,6 +148,11 @@ Kirigami.ApplicationWindow {
                     id: trackDelegate
                     width: ListView.view.width
                     highlighted: index === playlistModel.currentIndex
+
+                    onClicked: {
+                        playlistModel.setCurrentIndex(index);
+                        playTrack(playlistModel.urlAt(index));
+                    }
 
                     contentItem: RowLayout {
                         spacing: Kirigami.Units.smallSpacing
