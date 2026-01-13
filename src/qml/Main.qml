@@ -20,6 +20,30 @@ Kirigami.ApplicationWindow {
     minimumHeight: 500
     maximumHeight: 500
 
+    // Track if a file is loaded
+    readonly property bool hasFile: mediaPlayer.source.toString() !== ""
+
+    // Supported audio extensions for drag-and-drop validation
+    readonly property var audioExtensions: [".mp3", ".flac", ".ogg", ".wav", ".m4a", ".aac", ".wma", ".opus"]
+
+    // Check if a file has a supported audio extension
+    function isAudioFile(filePath) {
+        var path = filePath.toString().toLowerCase();
+        for (var i = 0; i < audioExtensions.length; i++) {
+            if (path.endsWith(audioExtensions[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Load and play an audio file
+    function openFile(fileUrl) {
+        audioPlayer.loadFile(fileUrl);
+        mediaPlayer.source = fileUrl;
+        mediaPlayer.play();
+    }
+
     // Time formatting helper function
     function formatTime(ms) {
         if (ms <= 0)
@@ -79,9 +103,7 @@ Kirigami.ApplicationWindow {
         fileMode: FileDialog.OpenFile
         nameFilters: [i18n("Audio Files") + " (*.mp3 *.flac *.ogg *.wav *.m4a *.aac *.wma *.opus)", i18n("All Files") + " (*)"]
         onAccepted: {
-            audioPlayer.loadFile(selectedFile);
-            mediaPlayer.source = selectedFile;
-            mediaPlayer.play();
+            openFile(selectedFile);
         }
     }
 
@@ -101,168 +123,235 @@ Kirigami.ApplicationWindow {
             }
         ]
 
-        ColumnLayout {
+        // Drag and drop area
+        DropArea {
+            id: dropArea
             anchors.fill: parent
-            anchors.margins: Kirigami.Units.largeSpacing
-            spacing: Kirigami.Units.largeSpacing
 
-            // Album Art Area
-            Item {
-                Layout.alignment: Qt.AlignHCenter
-                Layout.preferredWidth: 280
-                Layout.preferredHeight: 280
+            onEntered: function (drag) {
+                if (drag.hasUrls) {
+                    drag.accepted = true;
+                } else {
+                    drag.accepted = false;
+                }
+            }
 
-                Rectangle {
-                    anchors.fill: parent
-                    color: Kirigami.Theme.backgroundColor
-                    border.color: Kirigami.Theme.disabledTextColor
-                    border.width: 1
-                    radius: Kirigami.Units.smallSpacing
-
-                    // Album art image
-                    Image {
-                        id: albumArtImage
-                        anchors.fill: parent
-                        anchors.margins: 1
-                        source: audioPlayer.albumArtPath
-                        fillMode: Image.PreserveAspectFit
-                        visible: audioPlayer.albumArtPath !== ""
-                    }
-
-                    // Placeholder icon when no album art
-                    Kirigami.Icon {
-                        anchors.centerIn: parent
-                        width: 120
-                        height: 120
-                        source: "media-optical-audio"
-                        opacity: 0.3
-                        visible: audioPlayer.albumArtPath === ""
+            onDropped: function (drop) {
+                if (drop.hasUrls && drop.urls.length > 0) {
+                    var fileUrl = drop.urls[0];
+                    if (isAudioFile(fileUrl)) {
+                        openFile(fileUrl);
+                    } else {
+                        showError(i18n("Unsupported file format"));
                     }
                 }
             }
 
-            // Track Info
+            // Visual feedback when dragging
+            Rectangle {
+                anchors.fill: parent
+                color: Kirigami.Theme.highlightColor
+                opacity: dropArea.containsDrag ? 0.2 : 0
+                radius: Kirigami.Units.smallSpacing
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: 150
+                    }
+                }
+            }
+
+            // Empty State Placeholder
             ColumnLayout {
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignHCenter
-                spacing: Kirigami.Units.smallSpacing
-
-                // Title
-                Controls.Label {
-                    Layout.fillWidth: true
-                    text: audioPlayer.hasMetadata ? audioPlayer.title : (mediaPlayer.source.toString() !== "" ? i18n("Unknown Title") : "")
-                    font.bold: true
-                    font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.2
-                    horizontalAlignment: Text.AlignHCenter
-                    elide: Text.ElideRight
-                }
-
-                // Artist - Album
-                Controls.Label {
-                    Layout.fillWidth: true
-                    text: {
-                        if (!audioPlayer.hasMetadata && mediaPlayer.source.toString() === "") {
-                            return "";
-                        }
-                        var artist = audioPlayer.hasMetadata ? audioPlayer.artist : i18n("Unknown Artist");
-                        var album = audioPlayer.hasMetadata && audioPlayer.album !== "" ? audioPlayer.album : "";
-                        if (album !== "") {
-                            return artist + " - " + album;
-                        }
-                        return artist;
-                    }
-                    color: Kirigami.Theme.disabledTextColor
-                    horizontalAlignment: Text.AlignHCenter
-                    elide: Text.ElideRight
-                }
-            }
-
-            // Spacer
-            Item {
-                Layout.fillHeight: true
-            }
-
-            // Seek Bar with Time Display
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: Kirigami.Units.smallSpacing
-
-                Controls.Slider {
-                    id: seekSlider
-                    Layout.fillWidth: true
-                    from: 0
-                    to: mediaPlayer.duration > 0 ? mediaPlayer.duration : 1
-                    value: mediaPlayer.position
-                    enabled: mediaPlayer.duration > 0
-
-                    onMoved: {
-                        mediaPlayer.position = value;
-                    }
-                }
-
-                RowLayout {
-                    Layout.fillWidth: true
-
-                    Controls.Label {
-                        text: formatTime(mediaPlayer.position)
-                        font.pointSize: Kirigami.Theme.smallFont.pointSize
-                        color: Kirigami.Theme.disabledTextColor
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    Controls.Label {
-                        text: formatTime(mediaPlayer.duration)
-                        font.pointSize: Kirigami.Theme.smallFont.pointSize
-                        color: Kirigami.Theme.disabledTextColor
-                    }
-                }
-            }
-
-            // Error Message Toast
-            Kirigami.InlineMessage {
-                id: errorMessage
-                Layout.fillWidth: true
-                type: Kirigami.MessageType.Error
-                showCloseButton: true
-                visible: false
-
-                onVisibleChanged: {
-                    if (!visible) {
-                        errorHideTimer.stop();
-                    }
-                }
-            }
-
-            // Control Buttons
-            RowLayout {
-                Layout.alignment: Qt.AlignHCenter
+                anchors.centerIn: parent
                 spacing: Kirigami.Units.largeSpacing
+                visible: !root.hasFile
 
-                // Play/Pause Button
-                Controls.Button {
-                    icon.name: mediaPlayer.playbackState === MediaPlayer.PlayingState ? "media-playback-pause" : "media-playback-start"
-                    text: mediaPlayer.playbackState === MediaPlayer.PlayingState ? i18n("Pause") : i18n("Play")
-                    enabled: mediaPlayer.source.toString() !== ""
-                    onClicked: {
-                        if (mediaPlayer.playbackState === MediaPlayer.PlayingState) {
-                            mediaPlayer.pause();
-                        } else {
-                            mediaPlayer.play();
+                Kirigami.Icon {
+                    Layout.alignment: Qt.AlignHCenter
+                    width: 128
+                    height: 128
+                    source: "folder-music-symbolic"
+                    opacity: 0.5
+                }
+
+                Kirigami.Heading {
+                    Layout.alignment: Qt.AlignHCenter
+                    text: i18n("No audio file loaded")
+                    level: 2
+                    opacity: 0.7
+                }
+
+                Controls.Label {
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.maximumWidth: 300
+                    text: i18n("Click \"Open\" to select a file or drag and drop an audio file here to start listening")
+                    wrapMode: Text.WordWrap
+                    horizontalAlignment: Text.AlignHCenter
+                    color: Kirigami.Theme.disabledTextColor
+                }
+            }
+
+            // Player UI (visible when file is loaded)
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: Kirigami.Units.largeSpacing
+                spacing: Kirigami.Units.largeSpacing
+                visible: root.hasFile
+
+                // Album Art Area
+                Item {
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.preferredWidth: 280
+                    Layout.preferredHeight: 280
+
+                    Rectangle {
+                        anchors.fill: parent
+                        color: Kirigami.Theme.backgroundColor
+                        border.color: Kirigami.Theme.disabledTextColor
+                        border.width: 1
+                        radius: Kirigami.Units.smallSpacing
+
+                        // Album art image
+                        Image {
+                            id: albumArtImage
+                            anchors.fill: parent
+                            anchors.margins: 1
+                            source: audioPlayer.albumArtPath
+                            fillMode: Image.PreserveAspectFit
+                            visible: audioPlayer.albumArtPath !== ""
+                        }
+
+                        // Placeholder icon when no album art
+                        Kirigami.Icon {
+                            anchors.centerIn: parent
+                            width: 120
+                            height: 120
+                            source: "media-optical-audio"
+                            opacity: 0.3
+                            visible: audioPlayer.albumArtPath === ""
                         }
                     }
                 }
 
-                // Stop Button
-                Controls.Button {
-                    icon.name: "media-playback-stop"
-                    text: i18n("Stop")
-                    enabled: mediaPlayer.source.toString() !== ""
-                    onClicked: {
-                        mediaPlayer.stop();
-                        mediaPlayer.position = 0;
+                // Track Info
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignHCenter
+                    spacing: Kirigami.Units.smallSpacing
+
+                    // Title
+                    Controls.Label {
+                        Layout.fillWidth: true
+                        text: audioPlayer.hasMetadata ? audioPlayer.title : i18n("Unknown Title")
+                        font.bold: true
+                        font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.2
+                        horizontalAlignment: Text.AlignHCenter
+                        elide: Text.ElideRight
+                    }
+
+                    // Artist - Album
+                    Controls.Label {
+                        Layout.fillWidth: true
+                        text: {
+                            var artist = audioPlayer.hasMetadata ? audioPlayer.artist : i18n("Unknown Artist");
+                            var album = audioPlayer.hasMetadata && audioPlayer.album !== "" ? audioPlayer.album : "";
+                            if (album !== "") {
+                                return artist + " - " + album;
+                            }
+                            return artist;
+                        }
+                        color: Kirigami.Theme.disabledTextColor
+                        horizontalAlignment: Text.AlignHCenter
+                        elide: Text.ElideRight
+                    }
+                }
+
+                // Spacer
+                Item {
+                    Layout.fillHeight: true
+                }
+
+                // Seek Bar with Time Display
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    spacing: Kirigami.Units.smallSpacing
+
+                    Controls.Slider {
+                        id: seekSlider
+                        Layout.fillWidth: true
+                        from: 0
+                        to: mediaPlayer.duration > 0 ? mediaPlayer.duration : 1
+                        value: mediaPlayer.position
+                        enabled: mediaPlayer.duration > 0
+
+                        onMoved: {
+                            mediaPlayer.position = value;
+                        }
+                    }
+
+                    RowLayout {
+                        Layout.fillWidth: true
+
+                        Controls.Label {
+                            text: formatTime(mediaPlayer.position)
+                            font.pointSize: Kirigami.Theme.smallFont.pointSize
+                            color: Kirigami.Theme.disabledTextColor
+                        }
+
+                        Item {
+                            Layout.fillWidth: true
+                        }
+
+                        Controls.Label {
+                            text: formatTime(mediaPlayer.duration)
+                            font.pointSize: Kirigami.Theme.smallFont.pointSize
+                            color: Kirigami.Theme.disabledTextColor
+                        }
+                    }
+                }
+
+                // Error Message Toast
+                Kirigami.InlineMessage {
+                    id: errorMessage
+                    Layout.fillWidth: true
+                    type: Kirigami.MessageType.Error
+                    showCloseButton: true
+                    visible: false
+
+                    onVisibleChanged: {
+                        if (!visible) {
+                            errorHideTimer.stop();
+                        }
+                    }
+                }
+
+                // Control Buttons
+                RowLayout {
+                    Layout.alignment: Qt.AlignHCenter
+                    spacing: Kirigami.Units.largeSpacing
+
+                    // Play/Pause Button
+                    Controls.Button {
+                        icon.name: mediaPlayer.playbackState === MediaPlayer.PlayingState ? "media-playback-pause" : "media-playback-start"
+                        text: mediaPlayer.playbackState === MediaPlayer.PlayingState ? i18n("Pause") : i18n("Play")
+                        onClicked: {
+                            if (mediaPlayer.playbackState === MediaPlayer.PlayingState) {
+                                mediaPlayer.pause();
+                            } else {
+                                mediaPlayer.play();
+                            }
+                        }
+                    }
+
+                    // Stop Button
+                    Controls.Button {
+                        icon.name: "media-playback-stop"
+                        text: i18n("Stop")
+                        onClicked: {
+                            mediaPlayer.stop();
+                            mediaPlayer.position = 0;
+                        }
                     }
                 }
             }
