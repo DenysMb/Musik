@@ -78,6 +78,71 @@ Kirigami.ApplicationWindow {
         }
     }
 
+    // PlaylistModel C++ backend for playlist management
+    PlaylistModel {
+        id: playlistModel
+
+        onErrorOccurred: function (message) {
+            showError(message);
+        }
+    }
+
+    // Playlist Drawer
+    Kirigami.OverlayDrawer {
+        id: playlistDrawer
+        edge: Qt.RightEdge
+        modal: true
+        width: Math.min(root.width * 0.85, 320)
+
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: 0
+
+            // Header row
+            RowLayout {
+                Layout.fillWidth: true
+                Layout.margins: Kirigami.Units.largeSpacing
+
+                Kirigami.Heading {
+                    text: i18n("Playlist")
+                    level: 2
+                    Layout.fillWidth: true
+                }
+
+                Controls.ToolButton {
+                    icon.name: "edit-clear-all"
+                    display: Controls.AbstractButton.IconOnly
+                    text: i18n("Clear playlist")
+                    onClicked: playlistModel.clear()
+                    enabled: playlistModel.count > 0
+
+                    Controls.ToolTip.text: text
+                    Controls.ToolTip.visible: hovered
+                    Controls.ToolTip.delay: Kirigami.Units.toolTipDelay
+                }
+            }
+
+            Kirigami.Separator {
+                Layout.fillWidth: true
+            }
+
+            // ListView placeholder (will be populated in TASK_010)
+            ListView {
+                id: playlistView
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                model: playlistModel
+                clip: true
+
+                // Placeholder delegate until TASK_010
+                delegate: Controls.ItemDelegate {
+                    width: playlistView.width
+                    text: model.title || i18n("Unknown Title")
+                }
+            }
+        }
+    }
+
     // MediaPlayer for audio playback
     MediaPlayer {
         id: mediaPlayer
@@ -117,6 +182,11 @@ Kirigami.ApplicationWindow {
 
         // Open action in the header toolbar
         actions: [
+            Kirigami.Action {
+                text: i18n("Playlist")
+                icon.name: "view-media-playlist"
+                onTriggered: playlistDrawer.open()
+            },
             Kirigami.Action {
                 text: i18n("Open")
                 icon.name: "document-open"
