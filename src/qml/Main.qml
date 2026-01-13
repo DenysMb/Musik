@@ -24,6 +24,10 @@ Kirigami.ApplicationWindow {
     // Track if a file is loaded
     readonly property bool hasFile: mediaPlayer.source.toString() !== ""
 
+    // Playback mode properties
+    property bool shuffleEnabled: false
+    property int repeatMode: 0 // 0=Off, 1=One, 2=All
+
     // Supported audio extensions for drag-and-drop validation
     readonly property var audioExtensions: [".mp3", ".flac", ".ogg", ".wav", ".m4a", ".aac", ".wma", ".opus"]
 
@@ -492,7 +496,24 @@ Kirigami.ApplicationWindow {
                 // Control Buttons
                 RowLayout {
                     Layout.alignment: Qt.AlignHCenter
-                    spacing: Kirigami.Units.largeSpacing
+                    spacing: Kirigami.Units.smallSpacing
+
+                    // Previous Track Button
+                    Controls.ToolButton {
+                        icon.name: "media-skip-backward"
+                        enabled: playlistModel.count > 0
+                        onClicked: {
+                            var prevIdx = playlistModel.previousIndex();
+                            if (prevIdx >= 0) {
+                                playlistModel.setCurrentIndex(prevIdx);
+                                playTrack(playlistModel.urlAt(prevIdx));
+                            }
+                        }
+
+                        Controls.ToolTip.text: i18n("Previous track")
+                        Controls.ToolTip.visible: hovered
+                        Controls.ToolTip.delay: Kirigami.Units.toolTipDelay
+                    }
 
                     // Play/Pause Button
                     Controls.Button {
@@ -515,6 +536,23 @@ Kirigami.ApplicationWindow {
                             mediaPlayer.stop();
                             mediaPlayer.position = 0;
                         }
+                    }
+
+                    // Next Track Button
+                    Controls.ToolButton {
+                        icon.name: "media-skip-forward"
+                        enabled: playlistModel.count > 0
+                        onClicked: {
+                            var nextIdx = playlistModel.nextIndex(shuffleEnabled, repeatMode);
+                            if (nextIdx >= 0) {
+                                playlistModel.setCurrentIndex(nextIdx);
+                                playTrack(playlistModel.urlAt(nextIdx));
+                            }
+                        }
+
+                        Controls.ToolTip.text: i18n("Next track")
+                        Controls.ToolTip.visible: hovered
+                        Controls.ToolTip.delay: Kirigami.Units.toolTipDelay
                     }
                 }
             }
