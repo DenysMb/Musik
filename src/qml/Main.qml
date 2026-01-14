@@ -28,6 +28,9 @@ Kirigami.ApplicationWindow {
     property bool shuffleEnabled: false
     property int repeatMode: 0 // 0=Off, 1=One, 2=All
 
+    // Control auto-play when adding files via dialog
+    property bool shouldAutoPlay: true
+
     // Supported audio extensions for drag-and-drop validation
     readonly property var audioExtensions: [".mp3", ".flac", ".ogg", ".wav", ".m4a", ".aac", ".wma", ".opus"]
 
@@ -255,6 +258,19 @@ Kirigami.ApplicationWindow {
                 }
             }
 
+            // Add Files button (visible only when playlist has tracks)
+            Controls.Button {
+                Layout.fillWidth: true
+                Layout.margins: Kirigami.Units.largeSpacing
+                text: i18n("Add Files")
+                icon.name: "list-add"
+                visible: playlistModel.count > 0
+                onClicked: {
+                    shouldAutoPlay = false;
+                    fileDialog.open();
+                }
+            }
+
             // Empty state when no tracks in playlist
             ColumnLayout {
                 Layout.fillWidth: true
@@ -349,13 +365,15 @@ Kirigami.ApplicationWindow {
             // Add all selected files to playlist
             playlistModel.addTracks(selectedFiles);
 
-            // If single file opened, always play it; otherwise auto-play if playlist was empty
-            if (selectedFiles.length === 1 && playlistModel.count > 0) {
-                playlistModel.currentIndex = playlistModel.count - 1;
-                playTrack(playlistModel.urlAt(playlistModel.currentIndex));
-            } else if (wasEmpty && playlistModel.count > 0) {
-                playlistModel.currentIndex = 0;
-                playTrack(playlistModel.urlAt(0));
+            // Auto-play if shouldAutoPlay is enabled
+            if (shouldAutoPlay) {
+                if (selectedFiles.length === 1 && playlistModel.count > 0) {
+                    playlistModel.currentIndex = playlistModel.count - 1;
+                    playTrack(playlistModel.urlAt(playlistModel.currentIndex));
+                } else if (wasEmpty && playlistModel.count > 0) {
+                    playlistModel.currentIndex = 0;
+                    playTrack(playlistModel.urlAt(0));
+                }
             }
         }
     }
@@ -377,7 +395,10 @@ Kirigami.ApplicationWindow {
             Kirigami.Action {
                 text: i18n("Open")
                 icon.name: "document-open"
-                onTriggered: fileDialog.open()
+                onTriggered: {
+                    shouldAutoPlay = true;
+                    fileDialog.open();
+                }
             }
         ]
 
@@ -437,13 +458,15 @@ Kirigami.ApplicationWindow {
                         // Add all audio files to playlist
                         playlistModel.addTracks(audioUrls);
 
-                        // If single file dropped, always play it; otherwise auto-play if playlist was empty
-                        if (audioUrls.length === 1 && playlistModel.count > 0) {
-                            playlistModel.currentIndex = playlistModel.count - 1;
-                            playTrack(playlistModel.urlAt(playlistModel.currentIndex));
-                        } else if (wasEmpty && playlistModel.count > 0) {
-                            playlistModel.currentIndex = 0;
-                            playTrack(playlistModel.urlAt(0));
+                        // Auto-play if shouldAutoPlay is enabled
+                        if (shouldAutoPlay) {
+                            if (audioUrls.length === 1 && playlistModel.count > 0) {
+                                playlistModel.currentIndex = playlistModel.count - 1;
+                                playTrack(playlistModel.urlAt(playlistModel.currentIndex));
+                            } else if (wasEmpty && playlistModel.count > 0) {
+                                playlistModel.currentIndex = 0;
+                                playTrack(playlistModel.urlAt(0));
+                            }
                         }
                     } else {
                         showError(i18n("No supported audio files found"));
