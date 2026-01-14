@@ -344,8 +344,11 @@ Kirigami.ApplicationWindow {
             // Add all selected files to playlist
             playlistModel.addTracks(selectedFiles);
 
-            // If playlist was empty, auto-play the first track
-            if (wasEmpty && playlistModel.count > 0) {
+            // If single file opened, always play it; otherwise auto-play if playlist was empty
+            if (selectedFiles.length === 1 && playlistModel.count > 0) {
+                playlistModel.currentIndex = playlistModel.count - 1;
+                playTrack(playlistModel.urlAt(playlistModel.currentIndex));
+            } else if (wasEmpty && playlistModel.count > 0) {
                 playlistModel.currentIndex = 0;
                 playTrack(playlistModel.urlAt(0));
             }
@@ -429,8 +432,11 @@ Kirigami.ApplicationWindow {
                         // Add all audio files to playlist
                         playlistModel.addTracks(audioUrls);
 
-                        // If playlist was empty, auto-play the first track
-                        if (wasEmpty && playlistModel.count > 0) {
+                        // If single file dropped, always play it; otherwise auto-play if playlist was empty
+                        if (audioUrls.length === 1 && playlistModel.count > 0) {
+                            playlistModel.currentIndex = playlistModel.count - 1;
+                            playTrack(playlistModel.urlAt(playlistModel.currentIndex));
+                        } else if (wasEmpty && playlistModel.count > 0) {
                             playlistModel.currentIndex = 0;
                             playTrack(playlistModel.urlAt(0));
                         }
