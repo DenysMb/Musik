@@ -157,15 +157,20 @@ Kirigami.ApplicationWindow {
                 reuseItems: true
                 visible: playlistModel.count > 0
 
-                delegate: Kirigami.SwipeListItem {
+                delegate: Controls.ItemDelegate {
                     id: trackDelegate
-                    width: ListView.view.width + Kirigami.Units.largeSpacing
+                    width: ListView.view.width
                     highlighted: index === playlistModel.currentIndex
                     padding: Kirigami.Units.mediumSpacing
 
                     onClicked: {
                         playlistModel.currentIndex = index;
                         playTrack(playlistModel.urlAt(index));
+                    }
+
+                    background: Rectangle {
+                        color: trackDelegate.highlighted ? Kirigami.Theme.highlightColor : (trackDelegate.hovered ? Kirigami.Theme.hoverColor : "transparent")
+                        radius: Kirigami.Units.smallSpacing
                     }
 
                     contentItem: RowLayout {
@@ -205,6 +210,7 @@ Kirigami.ApplicationWindow {
                                 text: model.title || i18n("Unknown Title")
                                 elide: Text.ElideRight
                                 font.bold: trackDelegate.highlighted
+                                color: trackDelegate.highlighted ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
                             }
 
                             Controls.Label {
@@ -215,14 +221,11 @@ Kirigami.ApplicationWindow {
                                 font.pointSize: Kirigami.Theme.smallFont.pointSize
                             }
                         }
-                    }
 
-                    actions: [
-                        Kirigami.Action {
-                            Layout.margins: Kirigami.Units.smallSpacing
+                        // Remove button
+                        Controls.ToolButton {
                             icon.name: "list-remove"
-                            text: i18n("Remove")
-                            onTriggered: {
+                            onClicked: {
                                 var removingCurrent = (index === playlistModel.currentIndex);
                                 var wasPlaying = (mediaPlayer.playbackState === MediaPlayer.PlayingState);
                                 var nextUrl = "";
@@ -255,7 +258,7 @@ Kirigami.ApplicationWindow {
                                 }
                             }
                         }
-                    ]
+                    }
                 }
             }
 
