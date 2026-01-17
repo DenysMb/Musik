@@ -113,7 +113,7 @@ Kirigami.ApplicationWindow {
 
         ColumnLayout {
             anchors.fill: parent
-            spacing: 0
+            // spacing: Kirigami.Units.largeSpacing
 
             // Header row
             RowLayout {
@@ -159,8 +159,9 @@ Kirigami.ApplicationWindow {
 
                 delegate: Kirigami.SwipeListItem {
                     id: trackDelegate
-                    width: ListView.view.width
+                    width: ListView.view.width + Kirigami.Units.largeSpacing
                     highlighted: index === playlistModel.currentIndex
+                    padding: Kirigami.Units.mediumSpacing
 
                     onClicked: {
                         playlistModel.currentIndex = index;
@@ -172,10 +173,9 @@ Kirigami.ApplicationWindow {
 
                         // Album art thumbnail
                         Rectangle {
-                            Layout.preferredWidth: 48
-                            Layout.preferredHeight: 48
+                            Layout.preferredWidth: Layout.preferredHeight
+                            Layout.preferredHeight: parent.height
                             color: Kirigami.Theme.backgroundColor
-                            radius: 4
 
                             Image {
                                 anchors.fill: parent
@@ -219,6 +219,7 @@ Kirigami.ApplicationWindow {
 
                     actions: [
                         Kirigami.Action {
+                            Layout.margins: Kirigami.Units.smallSpacing
                             icon.name: "list-remove"
                             text: i18n("Remove")
                             onTriggered: {
@@ -256,6 +257,11 @@ Kirigami.ApplicationWindow {
                         }
                     ]
                 }
+            }
+
+            Kirigami.Separator {
+                Layout.fillWidth: true
+                visible: playlistModel.count > 0
             }
 
             // Add Files button (visible only when playlist has tracks)
