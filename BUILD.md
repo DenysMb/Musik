@@ -13,7 +13,7 @@
 
 1. **Clone the repository:**
    ```bash
-   git clone https://invent.kde.org/denysmb/Musik.git
+   git clone https://github.com/KodeRoots/Musik.git
    cd Musik
    ```
 
