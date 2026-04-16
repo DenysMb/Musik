@@ -37,5 +37,6 @@ ecm_find_qmlmodule(org.kde.kirigami REQUIRED)
 add_subdirectory(src)
 
 install(PROGRAMS io.github.denysmb.musik.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+install(FILES src/assets/io.github.denysmb.musik.svg DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
