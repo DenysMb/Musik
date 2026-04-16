@@ -110,6 +110,24 @@ Kirigami.ApplicationWindow {
         }
     }
 
+    globalDrawer: Kirigami.GlobalDrawer {
+        isMenu: true
+        actions: [
+            Kirigami.Action {
+                text: i18nc("@action", "About")
+                icon.name: "help-about"
+                onTriggered: root.pageStack.layers.push(aboutPage)
+            }
+        ]
+    }
+
+    Component {
+        id: aboutPage
+        Kirigami.AboutPage {
+            aboutData: AboutData
+        }
+    }
+
     // Playlist Drawer
     Kirigami.OverlayDrawer {
         id: playlistDrawer
@@ -415,20 +433,8 @@ Kirigami.ApplicationWindow {
                     shouldAutoPlay = true;
                     fileDialog.open();
                 }
-            },
-            Kirigami.Action {
-                text: i18nc("@action", "About")
-                icon.name: "help-about"
-                onTriggered: root.pageStack.layers.push(aboutPage)
             }
         ]
-
-        Component {
-            id: aboutPage
-            Kirigami.AboutPage {
-                aboutData: AboutData
-            }
-        }
 
         // Blurred album art background
         Item {
