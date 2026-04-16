@@ -386,7 +386,7 @@ Kirigami.ApplicationWindow {
                                 Layout.fillWidth: true
                                 text: model.artist || i18n("Unknown Artist")
                                 elide: Text.ElideRight
-                                color: Kirigami.Theme.disabledTextColor
+                                opacity: 0.75
                                 font.pointSize: Kirigami.Theme.smallFont.pointSize
                             }
                         }
@@ -766,7 +766,7 @@ Kirigami.ApplicationWindow {
                             }
                             return artist;
                         }
-                        color: Kirigami.Theme.disabledTextColor
+                        opacity: 0.75
                         horizontalAlignment: Text.AlignHCenter
                         elide: Text.ElideRight
                     }
@@ -801,7 +801,7 @@ Kirigami.ApplicationWindow {
                         Controls.Label {
                             text: formatTime(mediaPlayer.position)
                             font.pointSize: Kirigami.Theme.smallFont.pointSize
-                            color: Kirigami.Theme.disabledTextColor
+                            opacity: 0.75
                         }
 
                         Item {
@@ -811,7 +811,7 @@ Kirigami.ApplicationWindow {
                         Controls.Label {
                             text: formatTime(mediaPlayer.duration)
                             font.pointSize: Kirigami.Theme.smallFont.pointSize
-                            color: Kirigami.Theme.disabledTextColor
+                            opacity: 0.75
                         }
                     }
                 }
