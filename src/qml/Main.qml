@@ -16,11 +16,11 @@ Kirigami.ApplicationWindow {
 
     title: i18nc("@title:window", "Musik")
     width: 400
-    height: root.showVolumeControls ? 550 : 510
+    height: Settings.showVolumeControls ? 550 : 510
     minimumWidth: 400
     maximumWidth: 400
-    minimumHeight: root.showVolumeControls ? 550 : 510
-    maximumHeight: root.showVolumeControls ? 550 : 510
+    minimumHeight: Settings.showVolumeControls ? 550 : 510
+    maximumHeight: Settings.showVolumeControls ? 550 : 510
 
     // Keyboard Shortcuts
     Shortcut {
@@ -254,7 +254,7 @@ Kirigami.ApplicationWindow {
         }
     }
 
-    property bool showVolumeControls: true
+    property bool showVolumeControls: Settings.showVolumeControls
 
     globalDrawer: Kirigami.GlobalDrawer {
         isMenu: true
@@ -263,8 +263,8 @@ Kirigami.ApplicationWindow {
                 text: i18nc("@action", "Show volume controls")
                 icon.name: "audio-volume-high"
                 checkable: true
-                checked: root.showVolumeControls
-                onToggled: root.showVolumeControls = checked
+                checked: Settings.showVolumeControls
+                onToggled: Settings.showVolumeControls = checked
             },
             Kirigami.Action {
                 text: i18nc("@action", "About")

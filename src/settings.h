@@ -17,6 +17,7 @@ class Settings : public QObject
 
     Q_PROPERTY(int volume READ volume WRITE setVolume NOTIFY volumeChanged)
     Q_PROPERTY(bool muted READ muted WRITE setMuted NOTIFY mutedChanged)
+    Q_PROPERTY(bool showVolumeControls READ showVolumeControls WRITE setShowVolumeControls NOTIFY showVolumeControlsChanged)
 
 public:
     explicit Settings(QObject *parent = nullptr);
@@ -27,6 +28,9 @@ public:
     bool muted() const;
     void setMuted(bool muted);
 
+    bool showVolumeControls() const;
+    void setShowVolumeControls(bool show);
+
     static Settings *create(QQmlEngine *, QJSEngine *)
     {
         return new Settings;
@@ -35,6 +39,7 @@ public:
 Q_SIGNALS:
     void volumeChanged();
     void mutedChanged();
+    void showVolumeControlsChanged();
 
 private:
     void loadSettings();
@@ -43,6 +48,7 @@ private:
     KSharedConfig::Ptr m_config;
     int m_volume = 70;
     bool m_muted = false;
+    bool m_showVolumeControls = true;
 };
 
 #endif // SETTINGS_H

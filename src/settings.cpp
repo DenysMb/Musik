@@ -45,11 +45,26 @@ void Settings::setMuted(bool muted)
     }
 }
 
+bool Settings::showVolumeControls() const
+{
+    return m_showVolumeControls;
+}
+
+void Settings::setShowVolumeControls(bool show)
+{
+    if (m_showVolumeControls != show) {
+        m_showVolumeControls = show;
+        Q_EMIT showVolumeControlsChanged();
+        saveSettings();
+    }
+}
+
 void Settings::loadSettings()
 {
     KConfigGroup group = m_config->group(QStringLiteral("Audio"));
     m_volume = group.readEntry(QStringLiteral("Volume"), 70);
     m_muted = group.readEntry(QStringLiteral("Muted"), false);
+    m_showVolumeControls = group.readEntry(QStringLiteral("ShowVolumeControls"), true);
 }
 
 void Settings::saveSettings()
@@ -57,5 +72,6 @@ void Settings::saveSettings()
     KConfigGroup group = m_config->group(QStringLiteral("Audio"));
     group.writeEntry(QStringLiteral("Volume"), m_volume);
     group.writeEntry(QStringLiteral("Muted"), m_muted);
+    group.writeEntry(QStringLiteral("ShowVolumeControls"), m_showVolumeControls);
     group.sync();
 }
