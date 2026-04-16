@@ -11,7 +11,8 @@
     "--socket=pulseaudio",
     "--device=dri",
     "--share=network",
-    "--filesystem=xdg-music"
+    "--filesystem=home",
+    "--filesystem=xdg-run/gvfsd-metadata:ro"
   ],
   "modules": [
     {
