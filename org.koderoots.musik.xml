@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="audio/mpeg">
+    <glob pattern="*.mp3"/>
+    <glob pattern="*.mp2"/>
+    <glob pattern="*.mpga"/>
+  </mime-type>
+  <mime-type type="audio/flac">
+    <glob pattern="*.flac"/>
+  </mime-type>
+  <mime-type type="audio/ogg">
+    <glob pattern="*.ogg"/>
+    <glob pattern="*.oga"/>
+  </mime-type>
+  <mime-type type="audio/x-wav">
+    <glob pattern="*.wav"/>
+  </mime-type>
+  <mime-type type="audio/mp4">
+    <glob pattern="*.m4a"/>
+    <glob pattern="*.m4b"/>
+  </mime-type>
+  <mime-type type="audio/aac">
+    <glob pattern="*.aac"/>
+  </mime-type>
+  <mime-type type="audio/x-ms-wma">
+    <glob pattern="*.wma"/>
+  </mime-type>
+  <mime-type type="audio/opus">
+    <glob pattern="*.opus"/>
+  </mime-type>
+  <mime-type type="audio/mpegurl">
+    <glob pattern="*.m3u"/>
+  </mime-type>
+  <mime-type type="audio/vnd.rn-realaudio">
+    <glob pattern="*.ra"/>
+    <glob pattern="*.ram"/>
+  </mime-type>
+  <mime-type type="audio/x-mpegurl">
+    <glob pattern="*.m3u"/>
+  </mime-type>
+  <mime-type type="audio/x-musepack">
+    <glob pattern="*.mpc"/>
+    <glob pattern="*.mpp"/>
+    <glob pattern="*.mp+"/>
+  </mime-type>
+  <mime-type type="audio/x-pn-realaudio">
+    <glob pattern="*.ra"/>
+    <glob pattern="*.rm"/>
+  </mime-type>
+  <mime-type type="audio/x-scpls">
+    <glob pattern="*.pls"/>
+  </mime-type>
+  <mime-type type="audio/x-speex">
+    <glob pattern="*.spx"/>
+  </mime-type>
+</mime-info>

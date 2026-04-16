@@ -8,6 +8,10 @@
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QString>
+#include <QCommandLineParser>
+#include <QFileInfo>
+#include <QDir>
+#include <QMetaObject>
 
 #include <KLocalizedContext>
 #include <QCoreApplication>
@@ -50,6 +54,21 @@ int main(int argc, char *argv[])
         QQuickStyle::setStyle(QStringLiteral("org.kde.desktop"));
     }
 
+    QCommandLineParser parser;
+    parser.setApplicationDescription(aboutData.shortDescription());
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.addPositionalArgument(QStringLiteral("files"), i18n("Audio files to open."), QStringLiteral("[files...]"));
+    parser.process(app);
+
+    QStringList fileUrls;
+    for (const QString &arg : parser.positionalArguments()) {
+        QFileInfo fileInfo(arg);
+        if (fileInfo.exists()) {
+            fileUrls.append(QUrl::fromLocalFile(fileInfo.absoluteFilePath()).toString());
+        }
+    }
+
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
 
@@ -57,6 +76,12 @@ int main(int argc, char *argv[])
 
     if (engine.rootObjects().isEmpty()) {
         return -1;
+    }
+
+    if (!fileUrls.isEmpty()) {
+        QObject *rootObject = engine.rootObjects().first();
+        QMetaObject::invokeMethod(rootObject, "openFiles",
+                                  Q_ARG(QVariant, QVariant::fromValue(fileUrls)));
     }
 
     return app.exec();

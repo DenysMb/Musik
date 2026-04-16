@@ -39,5 +39,6 @@ add_subdirectory(src)
 
 install(PROGRAMS org.koderoots.musik.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES src/assets/org.koderoots.musik.svg DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps)
+install(FILES org.koderoots.musik.xml DESTINATION ${KDE_INSTALL_MIMEDIR})
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)

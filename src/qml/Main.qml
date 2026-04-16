@@ -197,6 +197,18 @@ Kirigami.ApplicationWindow {
         mediaPlayer.play();
     }
 
+    // Open multiple files from command-line or external source
+    function openFiles(fileUrlList) {
+        if (!fileUrlList || fileUrlList.length === 0)
+            return;
+        var wasEmpty = (playlistModel.count === 0);
+        playlistModel.addTracks(fileUrlList);
+        if (wasEmpty && playlistModel.count > 0) {
+            playlistModel.currentIndex = 0;
+            playTrack(playlistModel.urlAt(0));
+        }
+    }
+
     // Play a track from the playlist by URL
     function playTrack(url) {
         if (!url || url.toString() === "")
