@@ -593,21 +593,22 @@ Kirigami.ApplicationWindow {
         Item {
             id: backgroundContainer
             anchors.fill: parent
+            anchors.margins: -Kirigami.Units.largeSpacing * 2
             visible: audioPlayer.albumArtPath !== ""
             z: -1
 
             Image {
                 id: backgroundImage
                 anchors.centerIn: parent
-                width: Math.max(parent.width, parent.height)
-                height: width
+                width: Math.max(parent.width, parent.height) + Kirigami.Units.largeSpacing
+                height: Math.max(parent.width, parent.height) + Kirigami.Units.largeSpacing
                 source: audioPlayer.albumArtPath
                 fillMode: Image.PreserveAspectCrop
                 visible: false
             }
 
             MultiEffect {
-                anchors.fill: parent
+                anchors.fill: backgroundImage
                 source: backgroundImage
                 blurEnabled: true
                 blurMax: 64
