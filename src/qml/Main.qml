@@ -316,11 +316,11 @@ Kirigami.ApplicationWindow {
             // Header row
             RowLayout {
                 Layout.fillWidth: true
-                Layout.margins: Kirigami.Units.largeSpacing
+                Layout.margins: miniMode ? Kirigami.Units.smallSpacing : Kirigami.Units.largeSpacing
 
                 Kirigami.Heading {
                     text: i18n("Playlist")
-                    level: 2
+                    level: miniMode ? 3 : 2
                     Layout.fillWidth: true
                 }
 
@@ -359,7 +359,7 @@ Kirigami.ApplicationWindow {
                     id: trackDelegate
                     width: ListView.view.width
                     highlighted: index === playlistModel.currentIndex
-                    padding: Kirigami.Units.mediumSpacing
+                    padding: miniMode ? Kirigami.Units.smallSpacing : Kirigami.Units.mediumSpacing
 
                     onClicked: {
                         playlistModel.currentIndex = index;
@@ -468,7 +468,7 @@ Kirigami.ApplicationWindow {
             // Add Files button (visible only when playlist has tracks)
             Controls.Button {
                 Layout.fillWidth: true
-                Layout.margins: Kirigami.Units.largeSpacing
+                Layout.margins: miniMode ? Kirigami.Units.smallSpacing : Kirigami.Units.largeSpacing
                 text: i18n("Add Tracks")
                 icon.name: "list-add"
                 visible: playlistModel.count > 0
@@ -483,7 +483,7 @@ Kirigami.ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 visible: playlistModel.count === 0
-                spacing: Kirigami.Units.largeSpacing
+                spacing: miniMode ? Kirigami.Units.smallSpacing : Kirigami.Units.largeSpacing
 
                 Item {
                     Layout.fillHeight: true
@@ -493,8 +493,8 @@ Kirigami.ApplicationWindow {
                 Kirigami.Icon {
                     Layout.alignment: Qt.AlignHCenter
                     source: "view-media-playlist"
-                    width: 64
-                    height: 64
+                    width: miniMode ? 48 : 64
+                    height: miniMode ? 48 : 64
                     opacity: 0.5
                 }
 
