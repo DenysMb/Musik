@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     KLocalizedString::setApplicationDomain("musik");
     QApplication::setApplicationName(QStringLiteral("Musik"));
-    QApplication::setDesktopFileName(QStringLiteral("io.github.denysmb.musik.desktop"));
+    QApplication::setDesktopFileName(QStringLiteral("org.koderoots.musik.desktop"));
     QApplication::setStyle(QStringLiteral("breeze"));
     if (qEnvironmentVariableIsEmpty("QT_QUICK_CONTROLS_STYLE")) {
         QQuickStyle::setStyle(QStringLiteral("org.kde.desktop"));
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
 
-    engine.loadFromModule("io.github.denysmb.musik", "Main");
+    engine.loadFromModule("org.koderoots.musik", "Main");
 
     if (engine.rootObjects().isEmpty()) {
         return -1;

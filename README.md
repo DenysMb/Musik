@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="src/assets/io.github.denysmb.musik.svg" width="128" height="128" alt="Musik Icon"/>
+  <img src="src/assets/org.koderoots.musik.svg" width="128" height="128" alt="Musik Icon"/>
   
   # Musik
   

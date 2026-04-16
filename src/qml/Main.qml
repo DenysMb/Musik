@@ -8,7 +8,7 @@ import QtQuick.Dialogs
 import QtQuick.Effects
 import QtMultimedia
 import org.kde.kirigami as Kirigami
-import io.github.denysmb.musik
+import org.koderoots.musik
 
 Kirigami.ApplicationWindow {
     id: root

@@ -2,7 +2,7 @@ add_executable(musik)
 
 ecm_add_qml_module(musik
     URI
-    io.github.denysmb.musik
+    org.koderoots.musik
 )
 
 target_sources(musik
