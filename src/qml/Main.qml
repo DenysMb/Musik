@@ -283,7 +283,8 @@ Kirigami.ApplicationWindow {
                 text: i18nc("@action", "Show volume controls")
                 icon.name: "audio-volume-high"
                 checkable: true
-                checked: Settings.showVolumeControls
+                checked: Settings.showVolumeControls && !Settings.miniMode
+                enabled: !Settings.miniMode
                 onToggled: Settings.showVolumeControls = checked
             },
             Kirigami.Action {
