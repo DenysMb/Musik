@@ -16,11 +16,11 @@ Kirigami.ApplicationWindow {
 
     title: i18nc("@title:window", "Musik")
     width: 400
-    height: root.showVolumeControls ? 550 : 500
+    height: root.showVolumeControls ? 550 : 510
     minimumWidth: 400
     maximumWidth: 400
-    minimumHeight: root.showVolumeControls ? 550 : 500
-    maximumHeight: root.showVolumeControls ? 550 : 500
+    minimumHeight: root.showVolumeControls ? 550 : 510
+    maximumHeight: root.showVolumeControls ? 550 : 510
 
     // Keyboard Shortcuts
     Shortcut {
