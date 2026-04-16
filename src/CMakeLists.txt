@@ -33,4 +33,9 @@ target_link_libraries(musik
     TagLib::TagLib
 )
 
+target_compile_definitions(musik
+    PRIVATE
+    MUSIK_VERSION_STRING="${PROJECT_VERSION}"
+)
+
 install(TARGETS musik ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

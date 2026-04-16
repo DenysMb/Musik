@@ -8,6 +8,7 @@ import QtQuick.Dialogs
 import QtQuick.Effects
 import QtMultimedia
 import org.kde.kirigami as Kirigami
+import org.kde.coreaddons
 import org.koderoots.musik
 
 Kirigami.ApplicationWindow {
@@ -408,8 +409,20 @@ Kirigami.ApplicationWindow {
                     shouldAutoPlay = true;
                     fileDialog.open();
                 }
+            },
+            Kirigami.Action {
+                text: i18nc("@action", "About")
+                icon.name: "help-about"
+                onTriggered: root.pageStack.layers.push(aboutPage)
             }
         ]
+
+        Component {
+            id: aboutPage
+            Kirigami.AboutPage {
+                aboutData: AboutData
+            }
+        }
 
         // Blurred album art background
         Item {
