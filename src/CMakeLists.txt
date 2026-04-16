@@ -12,6 +12,8 @@ target_sources(musik
     audioplayer.h
     playlistmodel.cpp
     playlistmodel.h
+    settings.cpp
+    settings.h
 )
 
 ecm_target_qml_sources(musik
@@ -30,6 +32,7 @@ target_link_libraries(musik
     KF6::I18n
     KF6::CoreAddons
     KF6::IconThemes
+    KF6::ConfigCore
     TagLib::TagLib
 )
 

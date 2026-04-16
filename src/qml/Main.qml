@@ -95,6 +95,12 @@ Kirigami.ApplicationWindow {
         }
     }
 
+    // AudioOutput for volume control
+    AudioOutput {
+        id: audioOutput
+        volume: Settings.muted ? 0.0 : Settings.volume / 100.0
+    }
+
     // PlaylistModel C++ backend for playlist management
     PlaylistModel {
         id: playlistModel
@@ -325,7 +331,7 @@ Kirigami.ApplicationWindow {
     // MediaPlayer for audio playback
     MediaPlayer {
         id: mediaPlayer
-        audioOutput: AudioOutput {}
+        audioOutput: audioOutput
 
         onPlaybackStateChanged: {
             // Auto-play next track when current track ends naturally
@@ -772,7 +778,37 @@ Kirigami.ApplicationWindow {
                                 repeatMode = 0;
                         }
 
-                        Controls.ToolTip.text: repeatMode === 0 ? i18n("Repeat: Off") : repeatMode === 1 ? i18n("Repeat: One") : i18n("Repeat: All")
+                    Controls.ToolTip.text: repeatMode === 0 ? i18n("Repeat: Off") : repeatMode === 1 ? i18n("Repeat: One") : i18n("Repeat: All")
+                    Controls.ToolTip.visible: hovered
+                    Controls.ToolTip.delay: Kirigami.Units.toolTipDelay
+                    }
+
+                    // Mute Button
+                    Controls.ToolButton {
+                        icon.name: Settings.muted ? "audio-volume-muted" : "audio-volume-high"
+                        checkable: true
+                        checked: Settings.muted
+                        onCheckedChanged: Settings.muted = checked
+
+                        Controls.ToolTip.text: Settings.muted ? i18n("Unmute") : i18n("Mute")
+                        Controls.ToolTip.visible: hovered
+                        Controls.ToolTip.delay: Kirigami.Units.toolTipDelay
+                    }
+
+                    // Volume Slider
+                    Controls.Slider {
+                        id: volumeSlider
+                        Layout.preferredWidth: 100
+                        from: 0
+                        to: 100
+                        value: Settings.volume
+                        stepSize: 1
+
+                        onMoved: {
+                            Settings.volume = Math.round(value);
+                        }
+
+                        Controls.ToolTip.text: i18n("Volume: %1%", Settings.volume)
                         Controls.ToolTip.visible: hovered
                         Controls.ToolTip.delay: Kirigami.Units.toolTipDelay
                     }

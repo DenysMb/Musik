@@ -28,6 +28,7 @@ find_package(KF6 REQUIRED COMPONENTS
     CoreAddons
     QQC2DesktopStyle
     IconThemes
+    Config
 )
 
 find_package(TagLib REQUIRED)
