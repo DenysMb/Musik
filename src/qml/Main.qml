@@ -16,7 +16,7 @@ Kirigami.ApplicationWindow {
 
     title: i18nc("@title:window", "Musik")
     width: 400
-    height: 500
+    height: 550
     minimumWidth: 400
     maximumWidth: 400
     minimumHeight: 500
@@ -782,6 +782,13 @@ Kirigami.ApplicationWindow {
                     Controls.ToolTip.visible: hovered
                     Controls.ToolTip.delay: Kirigami.Units.toolTipDelay
                     }
+                }
+
+                // Volume Controls
+                RowLayout {
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.fillWidth: true
+                    spacing: Kirigami.Units.smallSpacing
 
                     // Mute Button
                     Controls.ToolButton {
@@ -798,11 +805,11 @@ Kirigami.ApplicationWindow {
                     // Volume Slider
                     Controls.Slider {
                         id: volumeSlider
-                        Layout.preferredWidth: 100
+                        Layout.fillWidth: true
                         from: 0
                         to: 100
                         value: Settings.volume
-                        stepSize: 1
+                        stepSize: 5
 
                         onMoved: {
                             Settings.volume = Math.round(value);
