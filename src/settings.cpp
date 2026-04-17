@@ -78,7 +78,7 @@ void Settings::loadSettings()
     KConfigGroup group = m_config->group(QStringLiteral("Audio"));
     m_volume = group.readEntry(QStringLiteral("Volume"), 70);
     m_muted = group.readEntry(QStringLiteral("Muted"), false);
-    m_showVolumeControls = group.readEntry(QStringLiteral("ShowVolumeControls"), true);
+    m_showVolumeControls = group.readEntry(QStringLiteral("ShowVolumeControls"), false);
     m_miniMode = group.readEntry(QStringLiteral("MiniMode"), false);
 }
 

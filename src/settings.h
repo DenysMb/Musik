@@ -53,7 +53,7 @@ private:
     KSharedConfig::Ptr m_config;
     int m_volume = 70;
     bool m_muted = false;
-    bool m_showVolumeControls = true;
+    bool m_showVolumeControls = false;
     bool m_miniMode = false;
 };
 
