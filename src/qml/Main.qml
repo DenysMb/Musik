@@ -15,12 +15,12 @@ Kirigami.ApplicationWindow {
     id: root
 
     title: i18nc("@title:window", "Musik")
-    width: 400
-    height: (miniMode ? 220 : (Settings.showVolumeControls ? 550 : 510))
-    minimumWidth: 400
-    maximumWidth: 400
-    minimumHeight: (miniMode ? 220 : (Settings.showVolumeControls ? 550 : 510))
-    maximumHeight: (miniMode ? 220 : (Settings.showVolumeControls ? 550 : 510))
+    width: 344
+    height: (miniMode ? 220 : (Settings.showVolumeControls ? 570 : 530))
+    minimumWidth: 344
+    maximumWidth: 344
+    minimumHeight: (miniMode ? 220 : (Settings.showVolumeControls ? 570 : 530))
+    maximumHeight: (miniMode ? 220 : (Settings.showVolumeControls ? 570 : 530))
     flags: Settings.noHeaderMode ? (Qt.Window | Qt.FramelessWindowHint) : Qt.Window
 
     // Keyboard Shortcuts
@@ -770,7 +770,7 @@ Kirigami.ApplicationWindow {
             // Player UI (visible when file is loaded)
             ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: Kirigami.Units.largeSpacing
+                anchors.margins: Kirigami.Units.largeSpacing * 3
                 spacing: Kirigami.Units.largeSpacing
                 visible: root.hasFile
 
