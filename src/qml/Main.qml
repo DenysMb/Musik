@@ -16,11 +16,11 @@ Kirigami.ApplicationWindow {
 
     title: i18nc("@title:window", "Musik")
     width: 344
-    height: (miniMode ? 220 : (Settings.showVolumeControls ? 570 : 530))
+    height: (miniMode ? 240 : (Settings.showVolumeControls ? 570 : 530)) - (noHeaderMode ? 44 : 0)
     minimumWidth: 344
     maximumWidth: 344
-    minimumHeight: (miniMode ? 220 : (Settings.showVolumeControls ? 570 : 530))
-    maximumHeight: (miniMode ? 220 : (Settings.showVolumeControls ? 570 : 530))
+    minimumHeight: (miniMode ? 240 : (Settings.showVolumeControls ? 570 : 530)) - (noHeaderMode ? 44 : 0)
+    maximumHeight: (miniMode ? 240 : (Settings.showVolumeControls ? 570 : 530)) - (noHeaderMode ? 44 : 0)
     flags: Settings.noHeaderMode ? (Qt.Window | Qt.FramelessWindowHint) : Qt.Window
 
     // Keyboard Shortcuts
