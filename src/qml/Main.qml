@@ -421,12 +421,11 @@ Kirigami.ApplicationWindow {
 
         ColumnLayout {
             anchors.fill: parent
-            // spacing: Kirigami.Units.largeSpacing
 
             // Header row
             RowLayout {
                 Layout.fillWidth: true
-                Layout.margins: miniMode ? 0 : Kirigami.Units.largeSpacing
+                Layout.leftMargin: Kirigami.Units.smallSpacing
 
                 Kirigami.Heading {
                     text: i18n("Playlist")
@@ -580,7 +579,6 @@ Kirigami.ApplicationWindow {
             // Add Files button (visible only when playlist has tracks)
             Controls.Button {
                 Layout.fillWidth: true
-                Layout.margins: miniMode ? 0 : Kirigami.Units.largeSpacing
                 text: i18n("Add Tracks")
                 icon.name: "list-add"
                 visible: playlistModel.count > 0
