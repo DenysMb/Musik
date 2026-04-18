@@ -867,7 +867,9 @@ Kirigami.ApplicationWindow {
                 Controls.Label {
                     Layout.alignment: Qt.AlignHCenter
                     Layout.maximumWidth: 300
-                    text: i18n("Click \"Open\" to select a file or drag and drop an audio file here to start listening")
+                    text: noHeaderMode
+                        ? i18n("Right-click and select \"Open\" to select a file or drag and drop an audio file here to start listening")
+                        : i18n("Click \"Open\" to select a file or drag and drop an audio file here to start listening")
                     wrapMode: Text.WordWrap
                     horizontalAlignment: Text.AlignHCenter
                     color: Kirigami.Theme.disabledTextColor
