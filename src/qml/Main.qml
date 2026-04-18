@@ -623,7 +623,28 @@ Kirigami.ApplicationWindow {
         // Border around the main content for no header mode
         Rectangle {
             anchors.fill: parent
-            anchors.margins: noHeaderMode ? Kirigami.Units.smallSpacing : 0
+            anchors.margins: noHeaderMode ? -Kirigami.Units.smallSpacing : 0
+            color: "transparent"
+            border.width: noHeaderMode ? 1 : 0
+            border.color: Kirigami.Theme.textColor
+            z: -1
+        }
+
+        // Opacity border around the main content for no header mode
+        Rectangle {
+            anchors.fill: parent
+            anchors.margins: noHeaderMode ? -Kirigami.Units.largeSpacing : 0
+            color: "transparent"
+            border.width: noHeaderMode ? Kirigami.Units.smallSpacing : 0
+            border.color: Kirigami.Theme.textColor
+            z: -1
+            opacity: 0.15
+        }
+
+        // Border around the main window for no header mode
+        Rectangle {
+            anchors.fill: parent
+            anchors.margins: noHeaderMode ? -Kirigami.Units.largeSpacing : 0
             color: "transparent"
             border.width: noHeaderMode ? 1 : 0
             border.color: Kirigami.Theme.textColor
