@@ -36,6 +36,13 @@ Kirigami.ApplicationWindow {
     }
 
     Shortcut {
+        sequence: "Ctrl+Shift+M"
+        onActivated: {
+            Settings.miniMode = !Settings.miniMode;
+        }
+    }
+
+    Shortcut {
         sequence: "Space"
         onActivated: {
             if (mediaPlayer.playbackState === MediaPlayer.PlayingState) {
