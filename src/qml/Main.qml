@@ -23,6 +23,53 @@ Kirigami.ApplicationWindow {
     maximumHeight: (miniMode ? 240 : (Settings.showVolumeControls ? 570 : 530)) - (noHeaderMode ? 44 : 0)
     flags: Settings.noHeaderMode ? (Qt.Window | Qt.FramelessWindowHint) : Qt.Window
 
+    Controls.Menu {
+        id: contextMenu
+
+        Controls.MenuItem {
+            text: i18nc("@action", "Mini mode")
+            checkable: true
+            checked: Settings.miniMode
+            onTriggered: Settings.miniMode = checked
+        }
+
+        Controls.MenuItem {
+            text: i18nc("@action", "No header mode")
+            checkable: true
+            checked: Settings.noHeaderMode
+            onTriggered: {
+                Settings.noHeaderMode = checked;
+                root.visible = false;
+                Qt.callLater(function () {
+                    root.visible = true;
+                });
+            }
+        }
+
+        Controls.MenuItem {
+            text: i18nc("@action", "Show volume controls")
+            checkable: true
+            checked: Settings.showVolumeControls && !Settings.miniMode && !Settings.noHeaderMode
+            enabled: !Settings.miniMode && !Settings.noHeaderMode
+            onTriggered: Settings.showVolumeControls = checked
+        }
+
+        Controls.MenuSeparator {}
+
+        Controls.MenuItem {
+            text: i18nc("@action", "Playlist")
+            onTriggered: playlistDrawer.open()
+        }
+
+        Controls.MenuItem {
+            text: i18nc("@action", "Open")
+            onTriggered: {
+                shouldAutoPlay = true;
+                fileDialog.open();
+            }
+        }
+    }
+
     // Keyboard Shortcuts
     Shortcut {
         sequence: StandardKey.MediaPlay
@@ -656,6 +703,17 @@ Kirigami.ApplicationWindow {
             border.width: noHeaderMode ? 1 : 0
             border.color: Kirigami.Theme.textColor
             z: -1
+        }
+
+        // Right-click context menu
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.RightButton
+            onClicked: {
+                if (mouse.button === Qt.RightButton) {
+                    contextMenu.popup();
+                }
+            }
         }
 
         // Open action in the header toolbar
