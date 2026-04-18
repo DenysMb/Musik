@@ -19,6 +19,7 @@ class Settings : public QObject
     Q_PROPERTY(bool muted READ muted WRITE setMuted NOTIFY mutedChanged)
     Q_PROPERTY(bool showVolumeControls READ showVolumeControls WRITE setShowVolumeControls NOTIFY showVolumeControlsChanged)
     Q_PROPERTY(bool miniMode READ miniMode WRITE setMiniMode NOTIFY miniModeChanged)
+    Q_PROPERTY(bool noHeaderMode READ noHeaderMode WRITE setNoHeaderMode NOTIFY noHeaderModeChanged)
 
 public:
     explicit Settings(QObject *parent = nullptr);
@@ -35,6 +36,9 @@ public:
     bool miniMode() const;
     void setMiniMode(bool miniMode);
 
+    bool noHeaderMode() const;
+    void setNoHeaderMode(bool noHeaderMode);
+
     static Settings *create(QQmlEngine *, QJSEngine *)
     {
         return new Settings;
@@ -45,6 +49,7 @@ Q_SIGNALS:
     void mutedChanged();
     void showVolumeControlsChanged();
     void miniModeChanged();
+    void noHeaderModeChanged();
 
 private:
     void loadSettings();
@@ -55,6 +60,7 @@ private:
     bool m_muted = false;
     bool m_showVolumeControls = false;
     bool m_miniMode = false;
+    bool m_noHeaderMode = false;
 };
 
 #endif // SETTINGS_H

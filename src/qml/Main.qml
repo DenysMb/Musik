@@ -15,12 +15,71 @@ Kirigami.ApplicationWindow {
     id: root
 
     title: i18nc("@title:window", "Musik")
-    width: 400
-    height: miniMode ? 220 : (Settings.showVolumeControls ? 550 : 510)
-    minimumWidth: 400
-    maximumWidth: 400
-    minimumHeight: miniMode ? 220 : (Settings.showVolumeControls ? 550 : 510)
-    maximumHeight: miniMode ? 220 : (Settings.showVolumeControls ? 550 : 510)
+    width: 344
+    height: (miniMode ? 240 : (Settings.showVolumeControls ? 570 : 530)) - (noHeaderMode ? 44 : 0)
+    minimumWidth: 344
+    maximumWidth: 344
+    minimumHeight: (miniMode ? 240 : (Settings.showVolumeControls ? 570 : 530)) - (noHeaderMode ? 44 : 0)
+    maximumHeight: (miniMode ? 240 : (Settings.showVolumeControls ? 570 : 530)) - (noHeaderMode ? 44 : 0)
+    flags: Settings.noHeaderMode ? (Qt.Window | Qt.FramelessWindowHint) : Qt.Window
+
+    Controls.Menu {
+        id: contextMenu
+
+        Controls.MenuItem {
+            text: i18nc("@action", "Mini mode")
+            icon.name: "view-restore"
+            checkable: true
+            checked: Settings.miniMode
+            onTriggered: Settings.miniMode = checked
+        }
+
+        Controls.MenuItem {
+            text: i18nc("@action", "No header mode")
+            icon.name: "view-fullscreen"
+            checkable: true
+            checked: Settings.noHeaderMode
+            onTriggered: {
+                Settings.noHeaderMode = checked;
+                root.visible = false;
+                Qt.callLater(function () {
+                    root.visible = true;
+                });
+            }
+        }
+
+        Controls.MenuItem {
+            text: i18nc("@action", "Show volume controls")
+            icon.name: "audio-volume-high"
+            checkable: true
+            checked: Settings.showVolumeControls && !Settings.miniMode && !Settings.noHeaderMode
+            enabled: !Settings.miniMode && !Settings.noHeaderMode
+            onTriggered: Settings.showVolumeControls = checked
+        }
+
+        Controls.MenuSeparator {}
+
+        Controls.MenuItem {
+            text: i18nc("@action", "Playlist")
+            icon.name: "view-media-playlist"
+            onTriggered: playlistDrawer.open()
+        }
+
+        Controls.MenuItem {
+            text: i18nc("@action", "Open")
+            icon.name: "document-open"
+            onTriggered: {
+                shouldAutoPlay = true;
+                fileDialog.open();
+            }
+        }
+
+        Controls.MenuItem {
+            text: i18nc("@action", "Close")
+            icon.name: "application-exit"
+            onTriggered: Qt.quit()
+        }
+    }
 
     // Keyboard Shortcuts
     Shortcut {
@@ -31,6 +90,13 @@ Kirigami.ApplicationWindow {
             } else {
                 mediaPlayer.play();
             }
+        }
+    }
+
+    Shortcut {
+        sequence: "Ctrl+Shift+M"
+        onActivated: {
+            Settings.miniMode = !Settings.miniMode;
         }
     }
 
@@ -166,6 +232,17 @@ Kirigami.ApplicationWindow {
         }
     }
 
+    Shortcut {
+        sequence: "Ctrl+H"
+        onActivated: {
+            Settings.noHeaderMode = !Settings.noHeaderMode;
+            root.visible = false;
+            Qt.callLater(function () {
+                root.visible = true;
+            });
+        }
+    }
+
     // Track if a file is loaded
     readonly property bool hasFile: mediaPlayer.source.toString() !== ""
 
@@ -268,6 +345,7 @@ Kirigami.ApplicationWindow {
 
     property bool showVolumeControls: Settings.showVolumeControls
     property bool miniMode: Settings.miniMode
+    property bool noHeaderMode: Settings.noHeaderMode
 
     globalDrawer: Kirigami.GlobalDrawer {
         isMenu: true
@@ -280,11 +358,24 @@ Kirigami.ApplicationWindow {
                 onToggled: Settings.miniMode = checked
             },
             Kirigami.Action {
+                text: i18nc("@action", "No header mode")
+                icon.name: "view-fullscreen"
+                checkable: true
+                checked: Settings.noHeaderMode
+                onToggled: {
+                    Settings.noHeaderMode = checked;
+                    root.visible = false;
+                    Qt.callLater(function () {
+                        root.visible = true;
+                    });
+                }
+            },
+            Kirigami.Action {
                 text: i18nc("@action", "Show volume controls")
                 icon.name: "audio-volume-high"
                 checkable: true
-                checked: Settings.showVolumeControls && !Settings.miniMode
-                enabled: !Settings.miniMode
+                checked: Settings.showVolumeControls && !Settings.miniMode && !Settings.noHeaderMode
+                enabled: !Settings.miniMode && !Settings.noHeaderMode
                 onToggled: Settings.showVolumeControls = checked
             },
             Kirigami.Action {
@@ -317,7 +408,7 @@ Kirigami.ApplicationWindow {
             // Header row
             RowLayout {
                 Layout.fillWidth: true
-                Layout.margins: miniMode ? Kirigami.Units.smallSpacing : Kirigami.Units.largeSpacing
+                Layout.margins: miniMode ? 0 : Kirigami.Units.largeSpacing
 
                 Kirigami.Heading {
                     text: i18n("Playlist")
@@ -469,7 +560,7 @@ Kirigami.ApplicationWindow {
             // Add Files button (visible only when playlist has tracks)
             Controls.Button {
                 Layout.fillWidth: true
-                Layout.margins: miniMode ? Kirigami.Units.smallSpacing : Kirigami.Units.largeSpacing
+                Layout.margins: miniMode ? 0 : Kirigami.Units.largeSpacing
                 text: i18n("Add Tracks")
                 icon.name: "list-add"
                 visible: playlistModel.count > 0
@@ -590,8 +681,51 @@ Kirigami.ApplicationWindow {
     pageStack.initialPage: Kirigami.Page {
         id: mainPage
 
-        title: i18nc("@title:window", "Musik")
+        title: noHeaderMode ? "" : i18nc("@title:window", "Musik")
         padding: Kirigami.Units.largeSpacing
+        globalToolBarStyle: noHeaderMode ? Kirigami.ApplicationHeaderStyle.None : Kirigami.ApplicationHeaderStyle.ToolBar
+
+        // Border around the main content for no header mode
+        Rectangle {
+            anchors.fill: parent
+            anchors.margins: noHeaderMode ? -Kirigami.Units.smallSpacing : 0
+            color: "transparent"
+            border.width: noHeaderMode ? 1 : 0
+            border.color: Kirigami.Theme.textColor
+            z: -1
+        }
+
+        // Opacity border around the main content for no header mode
+        Rectangle {
+            anchors.fill: parent
+            anchors.margins: noHeaderMode ? -Kirigami.Units.largeSpacing : 0
+            color: "transparent"
+            border.width: noHeaderMode ? Kirigami.Units.smallSpacing : 0
+            border.color: Kirigami.Theme.textColor
+            z: -1
+            opacity: 0.15
+        }
+
+        // Border around the main window for no header mode
+        Rectangle {
+            anchors.fill: parent
+            anchors.margins: noHeaderMode ? -Kirigami.Units.largeSpacing : 0
+            color: "transparent"
+            border.width: noHeaderMode ? 1 : 0
+            border.color: Kirigami.Theme.textColor
+            z: -1
+        }
+
+        // Right-click context menu
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.RightButton
+            onClicked: {
+                if (mouse.button === Qt.RightButton) {
+                    contextMenu.popup();
+                }
+            }
+        }
 
         // Open action in the header toolbar
         actions: [
@@ -635,6 +769,18 @@ Kirigami.ApplicationWindow {
                 blurMax: 64
                 blur: 1.0
                 opacity: 0.5
+            }
+        }
+
+        // Drag-to-move for frameless window
+        MouseArea {
+            anchors.fill: parent
+            enabled: Settings.noHeaderMode
+            visible: Settings.noHeaderMode
+            acceptedButtons: Qt.LeftButton
+            z: -1
+            onPressed: {
+                root.startSystemMove();
             }
         }
 
@@ -721,7 +867,7 @@ Kirigami.ApplicationWindow {
                 Controls.Label {
                     Layout.alignment: Qt.AlignHCenter
                     Layout.maximumWidth: 300
-                    text: i18n("Click \"Open\" to select a file or drag and drop an audio file here to start listening")
+                    text: noHeaderMode ? i18n("Right-click and select \"Open\" to select a file or drag and drop an audio file here to start listening") : i18n("Click \"Open\" to select a file or drag and drop an audio file here to start listening")
                     wrapMode: Text.WordWrap
                     horizontalAlignment: Text.AlignHCenter
                     color: Kirigami.Theme.disabledTextColor
@@ -731,7 +877,7 @@ Kirigami.ApplicationWindow {
             // Player UI (visible when file is loaded)
             ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: Kirigami.Units.largeSpacing
+                anchors.margins: Kirigami.Units.largeSpacing * 3
                 spacing: Kirigami.Units.largeSpacing
                 visible: root.hasFile
 
@@ -961,9 +1107,9 @@ Kirigami.ApplicationWindow {
                                 repeatMode = 0;
                         }
 
-                    Controls.ToolTip.text: repeatMode === 0 ? i18n("Repeat: Off") : repeatMode === 1 ? i18n("Repeat: One") : i18n("Repeat: All")
-                    Controls.ToolTip.visible: hovered
-                    Controls.ToolTip.delay: Kirigami.Units.toolTipDelay
+                        Controls.ToolTip.text: repeatMode === 0 ? i18n("Repeat: Off") : repeatMode === 1 ? i18n("Repeat: One") : i18n("Repeat: All")
+                        Controls.ToolTip.visible: hovered
+                        Controls.ToolTip.delay: Kirigami.Units.toolTipDelay
                     }
                 }
 

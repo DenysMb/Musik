@@ -73,6 +73,20 @@ void Settings::setMiniMode(bool miniMode)
     }
 }
 
+bool Settings::noHeaderMode() const
+{
+    return m_noHeaderMode;
+}
+
+void Settings::setNoHeaderMode(bool noHeaderMode)
+{
+    if (m_noHeaderMode != noHeaderMode) {
+        m_noHeaderMode = noHeaderMode;
+        Q_EMIT noHeaderModeChanged();
+        saveSettings();
+    }
+}
+
 void Settings::loadSettings()
 {
     KConfigGroup group = m_config->group(QStringLiteral("Audio"));
@@ -80,6 +94,7 @@ void Settings::loadSettings()
     m_muted = group.readEntry(QStringLiteral("Muted"), false);
     m_showVolumeControls = group.readEntry(QStringLiteral("ShowVolumeControls"), false);
     m_miniMode = group.readEntry(QStringLiteral("MiniMode"), false);
+    m_noHeaderMode = group.readEntry(QStringLiteral("NoHeaderMode"), false);
 }
 
 void Settings::saveSettings()
@@ -89,5 +104,6 @@ void Settings::saveSettings()
     group.writeEntry(QStringLiteral("Muted"), m_muted);
     group.writeEntry(QStringLiteral("ShowVolumeControls"), m_showVolumeControls);
     group.writeEntry(QStringLiteral("MiniMode"), m_miniMode);
+    group.writeEntry(QStringLiteral("NoHeaderMode"), m_noHeaderMode);
     group.sync();
 }
