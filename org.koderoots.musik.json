@@ -12,7 +12,8 @@
     "--device=dri",
     "--filesystem=xdg-music:ro",
     "--filesystem=xdg-download:ro",
-    "--talk-name=org.mpris.MediaPlayer2"
+    "--talk-name=org.mpris.MediaPlayer2",
+    "--own-name=org.mpris.MediaPlayer2.musik"
   ],
   "modules": [
     {
