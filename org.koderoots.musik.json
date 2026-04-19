@@ -10,9 +10,7 @@
     "--socket=wayland",
     "--socket=pulseaudio",
     "--device=dri",
-    "--share=network",
-    "--filesystem=home",
-    "--filesystem=xdg-run/gvfsd-metadata:ro"
+    "--filesystem=xdg-music:ro"
   ],
   "modules": [
     {
