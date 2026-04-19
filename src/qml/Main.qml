@@ -487,7 +487,7 @@ Kirigami.ApplicationWindow {
                         Rectangle {
                             Layout.preferredWidth: Layout.preferredHeight
                             Layout.preferredHeight: parent.height
-                            color: Kirigami.Theme.backgroundColor
+                            color: Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.15)
                             border.width: 1
                             border.color: Kirigami.Theme.disabledTextColor
 
@@ -931,7 +931,7 @@ Kirigami.ApplicationWindow {
                             Rectangle {
                                 Layout.preferredWidth: 40
                                 Layout.preferredHeight: 40
-                                color: Kirigami.Theme.backgroundColor
+                                color: Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.15)
                                 border.width: 1
                                 border.color: Kirigami.Theme.disabledTextColor
 
@@ -1006,7 +1006,7 @@ Kirigami.ApplicationWindow {
 
                     Rectangle {
                         anchors.fill: parent
-                        color: Kirigami.Theme.backgroundColor
+                        color: Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.15)
                         border.color: Kirigami.Theme.disabledTextColor
                         border.width: 1
                         radius: Kirigami.Units.smallSpacing
