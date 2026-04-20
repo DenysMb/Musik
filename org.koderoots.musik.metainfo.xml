@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<component type="desktop-application">
+  <id>org.koderoots.musik</id>
+
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+
+  <name>Musik</name>
+  <summary>Simple audio player for KDE Plasma</summary>
+
+  <developer id="org.koderoots">
+    <name>KodeRoots</name>
+  </developer>
+
+  <description>
+    <p>A lightweight native audio player built for KDE Plasma. Musik provides a clean and intuitive interface for playing your music collection with seamless desktop integration.</p>
+    <ul>
+      <li>Clean and intuitive design built with Kirigami</li>
+      <li>Native KDE integration using Qt/QML</li>
+      <li>Support for common audio formats including MP3, FLAC, OGG, and more</li>
+      <li>Lightweight with minimal resource usage</li>
+      <li>Playlist management and recently played history</li>
+    </ul>
+  </description>
+
+  <launchable type="desktop-id">org.koderoots.musik.desktop</launchable>
+
+  <content_rating type="oars-1.1" />
+
+  <url type="homepage">https://github.com/KodeRoots/Musik</url>
+  <url type="bugtracker">https://github.com/KodeRoots/Musik/issues</url>
+  <url type="vcs-browser">https://github.com/KodeRoots/Musik</url>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://kaftnndedwgveoywpzyl.supabase.co/storage/v1/object/public/flathub/musik/musik_main_window.png</image>
+      <caption>Main window with playback controls</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://kaftnndedwgveoywpzyl.supabase.co/storage/v1/object/public/flathub/musik/musik_playlist_drawer.png</image>
+      <caption>Playlist drawer view</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://kaftnndedwgveoywpzyl.supabase.co/storage/v1/object/public/flathub/musik/musik_mini_mode.png</image>
+      <caption>Mini mode view</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://kaftnndedwgveoywpzyl.supabase.co/storage/v1/object/public/flathub/musik/musik_no_header.png</image>
+      <caption>No header mode view</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://kaftnndedwgveoywpzyl.supabase.co/storage/v1/object/public/flathub/musik/musik_mini_mode_no_header.png</image>
+      <caption>No header mini mode view</caption>
+    </screenshot>
+  </screenshots>
+
+  <releases>
+    <release version="0.1.0" date="2026-04-19">
+      <description>
+        <p>Initial release of Musik.</p>
+        <ul>
+          <li>Audio playback with support for common formats</li>
+          <li>Playlist management</li>
+          <li>Recently played history</li>
+          <li>Kirigami-based KDE Plasma interface</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
+
+  <supports>
+    <control>keyboard</control>
+    <control>pointing</control>
+  </supports>
+
+  <custom>
+    <value key="flathub::manifest">https://github.com/KodeRoots/Musik/blob/main/org.koderoots.musik.json</value>
+  </custom>
+</component>

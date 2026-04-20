@@ -14,6 +14,83 @@ import org.koderoots.musik
 Kirigami.ApplicationWindow {
     id: root
 
+    Component.onCompleted: {
+        MprisController.registerService();
+        MprisController.volume = Settings.volume / 100.0;
+    }
+
+    onHasFileChanged: {
+        MprisController.canPlay = hasFile;
+        MprisController.canPause = hasFile;
+        MprisController.canSeek = hasFile;
+        MprisController.canGoNext = playlistModel.count > 1;
+        MprisController.canGoPrevious = playlistModel.count > 1;
+        MprisController.updateCanControls();
+    }
+
+    onShuffleEnabledChanged: {
+        MprisController.shuffle = shuffleEnabled;
+        MprisController.updateLoopAndShuffle();
+    }
+    onRepeatModeChanged: {
+        MprisController.repeatMode = repeatMode;
+        MprisController.updateLoopAndShuffle();
+    }
+
+    Connections {
+        target: MprisController
+
+        function onPlayRequested() {
+            mediaPlayer.play();
+        }
+
+        function onPauseRequested() {
+            mediaPlayer.pause();
+        }
+
+        function onPlayPauseRequested() {
+            if (mediaPlayer.playbackState === MediaPlayer.PlayingState)
+                mediaPlayer.pause();
+            else
+                mediaPlayer.play();
+        }
+
+        function onStopRequested() {
+            mediaPlayer.stop();
+            mediaPlayer.position = 0;
+        }
+
+        function onNextRequested() {
+            var nextIdx = playlistModel.nextIndex(shuffleEnabled, repeatMode);
+            if (nextIdx >= 0) {
+                playlistModel.currentIndex = nextIdx;
+                playTrack(playlistModel.urlAt(nextIdx));
+            }
+        }
+
+        function onPreviousRequested() {
+            var prevIdx = playlistModel.previousIndex();
+            if (prevIdx >= 0) {
+                playlistModel.currentIndex = prevIdx;
+                playTrack(playlistModel.urlAt(prevIdx));
+            }
+        }
+
+        function onSeekRequested(offset) {
+            if (mediaPlayer.duration > 0) {
+                mediaPlayer.position = Math.max(0, Math.min(mediaPlayer.duration, mediaPlayer.position + offset / 1000));
+            }
+        }
+
+        function onSetPositionRequested(position) {
+            mediaPlayer.position = position;
+        }
+
+        function onSetVolumeRequested(volume) {
+            Settings.volume = Math.round(volume * 100);
+        }
+    }
+
     title: i18nc("@title:window", "Musik")
     width: 344
     height: (miniMode ? 240 : (Settings.showVolumeControls ? 570 : 530)) - (noHeaderMode ? 44 : 0)
@@ -307,6 +384,9 @@ Kirigami.ApplicationWindow {
             playlistModel.currentIndex = playlistModel.count - 1;
         }
 
+        MprisController.canGoNext = playlistModel.count > 1;
+        MprisController.canGoPrevious = playlistModel.count > 1;
+
         audioPlayer.loadFile(url);
         mediaPlayer.source = url;
         mediaPlayer.play();
@@ -344,12 +424,24 @@ Kirigami.ApplicationWindow {
         onErrorOccurred: function (message) {
             showError(message);
         }
+
+        onMetadataChanged: {
+            MprisController.title = audioPlayer.title
+            MprisController.artist = audioPlayer.artist
+            MprisController.album = audioPlayer.album
+            MprisController.albumArtUrl = audioPlayer.albumArtPath
+            MprisController.updateMetadata()
+        }
     }
 
-    // AudioOutput for volume control
     AudioOutput {
         id: audioOutput
         volume: Settings.muted ? 0.0 : Settings.volume / 100.0
+
+        onVolumeChanged: {
+            MprisController.volume = audioOutput.volume;
+            MprisController.updateVolume();
+        }
     }
 
     // PlaylistModel C++ backend for playlist management
@@ -487,7 +579,7 @@ Kirigami.ApplicationWindow {
                         Rectangle {
                             Layout.preferredWidth: Layout.preferredHeight
                             Layout.preferredHeight: parent.height
-                            color: Kirigami.Theme.backgroundColor
+                            color: Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.15)
                             border.width: 1
                             border.color: Kirigami.Theme.disabledTextColor
 
@@ -634,8 +726,19 @@ Kirigami.ApplicationWindow {
         id: mediaPlayer
         audioOutput: audioOutput
 
+        onDurationChanged: {
+            MprisController.duration = mediaPlayer.duration;
+            MprisController.updateMetadata();
+        }
+
         onPlaybackStateChanged: {
-            // Auto-play next track when current track ends naturally
+            MprisController.playbackState = mediaPlayer.playbackState === MediaPlayer.PlayingState ? MprisController.Playing : (mediaPlayer.playbackState === MediaPlayer.PausedState ? MprisController.Paused : MprisController.Stopped);
+            MprisController.updatePlaybackState();
+            MprisController.canPlay = mediaPlayer.source.toString() !== "";
+            MprisController.canPause = mediaPlayer.source.toString() !== "";
+            MprisController.canSeek = mediaPlayer.source.toString() !== "";
+            MprisController.updateCanControls();
+
             if (mediaPlayer.playbackState === MediaPlayer.StoppedState && mediaPlayer.position >= mediaPlayer.duration - 100 && mediaPlayer.duration > 0) {
                 // Only auto-advance if playlist has tracks
                 if (playlistModel.count > 0) {
@@ -667,6 +770,14 @@ Kirigami.ApplicationWindow {
                 showError(i18n("Playback error: %1", errorString));
             }
         }
+    }
+
+    Timer {
+        id: mprisPositionTimer
+        interval: 1000
+        running: mediaPlayer.playbackState === MediaPlayer.PlayingState
+        repeat: true
+        onTriggered: MprisController.position = mediaPlayer.position
     }
 
     // File dialog for opening audio files
@@ -931,7 +1042,7 @@ Kirigami.ApplicationWindow {
                             Rectangle {
                                 Layout.preferredWidth: 40
                                 Layout.preferredHeight: 40
-                                color: Kirigami.Theme.backgroundColor
+                                color: Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.15)
                                 border.width: 1
                                 border.color: Kirigami.Theme.disabledTextColor
 
@@ -1006,7 +1117,7 @@ Kirigami.ApplicationWindow {
 
                     Rectangle {
                         anchors.fill: parent
-                        color: Kirigami.Theme.backgroundColor
+                        color: Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.15)
                         border.color: Kirigami.Theme.disabledTextColor
                         border.width: 1
                         radius: Kirigami.Units.smallSpacing

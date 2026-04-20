@@ -10,6 +10,8 @@ target_sources(musik
     main.cpp
     audioplayer.cpp
     audioplayer.h
+    mpriscontroller.cpp
+    mpriscontroller.h
     playlistmodel.cpp
     playlistmodel.h
     recentfilesmodel.cpp
@@ -31,6 +33,7 @@ target_link_libraries(musik
     Qt6::QuickControls2
     Qt6::Widgets
     Qt6::Multimedia
+    Qt6::DBus
     KF6::I18n
     KF6::CoreAddons
     KF6::IconThemes
