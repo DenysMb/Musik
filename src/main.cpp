@@ -17,7 +17,7 @@
 #include <QCoreApplication>
 
 #ifndef MUSIK_VERSION_STRING
-#define MUSIK_VERSION_STRING "0.1.0"
+#define MUSIK_VERSION_STRING "0.1.1"
 #endif
 
 int main(int argc, char *argv[])

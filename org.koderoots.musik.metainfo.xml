@@ -56,6 +56,14 @@
   </screenshots>
 
   <releases>
+    <release version="0.1.1" date="2026-04-21">
+      <description>
+        <p>Bug fix release.</p>
+        <ul>
+          <li>Fixed volume controls action being incorrectly disabled in no-header mode. It is now only disabled in mini mode as intended.</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.1.0" date="2026-04-19">
       <description>
         <p>Initial release of Musik.</p>
