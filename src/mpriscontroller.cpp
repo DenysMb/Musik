@@ -8,7 +8,7 @@
 #include <QDBusMessage>
 #include <QTimer>
 
-static const QString MPRIS_SERVICE = QStringLiteral("org.mpris.MediaPlayer2.musik");
+static const QString MPRIS_SERVICE = QStringLiteral("org.mpris.MediaPlayer2.org.koderoots.musik");
 static const QString MPRIS_PATH = QStringLiteral("/org/mpris/MediaPlayer2");
 
 MprisController::MprisController(QObject *parent)

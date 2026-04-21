@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QIcon>
 #include <KAboutData>
 #include <KIconTheme>
 #include <KLocalizedString>
@@ -17,7 +18,7 @@
 #include <QCoreApplication>
 
 #ifndef MUSIK_VERSION_STRING
-#define MUSIK_VERSION_STRING "0.1.0"
+#define MUSIK_VERSION_STRING "0.1.1"
 #endif
 
 int main(int argc, char *argv[])
@@ -45,6 +46,7 @@ int main(int argc, char *argv[])
         i18nc("NAME OF TRANSLATORS", "Your names"),
         i18nc("EMAIL OF TRANSLATORS", "Your emails"));
     KAboutData::setApplicationData(aboutData);
+    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("org.koderoots.musik")));
 
     QApplication::setApplicationName(aboutData.componentName());
     QApplication::setApplicationVersion(aboutData.version());

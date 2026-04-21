@@ -34,28 +34,36 @@
 
   <screenshots>
     <screenshot type="default">
-      <image>https://kaftnndedwgveoywpzyl.supabase.co/storage/v1/object/public/flathub/musik/musik_main_window.png</image>
+      <image>https://kaftnndedwgveoywpzyl.supabase.co/storage/v1/object/public/flathub/musik/0.1.1/musik_main_window.png</image>
       <caption>Main window with playback controls</caption>
     </screenshot>
     <screenshot>
-      <image>https://kaftnndedwgveoywpzyl.supabase.co/storage/v1/object/public/flathub/musik/musik_playlist_drawer.png</image>
+      <image>https://kaftnndedwgveoywpzyl.supabase.co/storage/v1/object/public/flathub/musik/0.1.1/musik_playlist_drawer.png</image>
       <caption>Playlist drawer view</caption>
     </screenshot>
     <screenshot>
-      <image>https://kaftnndedwgveoywpzyl.supabase.co/storage/v1/object/public/flathub/musik/musik_mini_mode.png</image>
+      <image>https://kaftnndedwgveoywpzyl.supabase.co/storage/v1/object/public/flathub/musik/0.1.1/musik_mini_mode.png</image>
       <caption>Mini mode view</caption>
     </screenshot>
     <screenshot>
-      <image>https://kaftnndedwgveoywpzyl.supabase.co/storage/v1/object/public/flathub/musik/musik_no_header.png</image>
+      <image>https://kaftnndedwgveoywpzyl.supabase.co/storage/v1/object/public/flathub/musik/0.1.1/musik_no_header.png</image>
       <caption>No header mode view</caption>
     </screenshot>
     <screenshot>
-      <image>https://kaftnndedwgveoywpzyl.supabase.co/storage/v1/object/public/flathub/musik/musik_mini_mode_no_header.png</image>
+      <image>https://kaftnndedwgveoywpzyl.supabase.co/storage/v1/object/public/flathub/musik/0.1.1/musik_mini_mode_no_header.png</image>
       <caption>No header mini mode view</caption>
     </screenshot>
   </screenshots>
 
   <releases>
+    <release version="0.1.1" date="2026-04-21">
+      <description>
+        <p>Bug fix release.</p>
+        <ul>
+          <li>Fixed volume controls action being incorrectly disabled in no-header mode. It is now only disabled in mini mode as intended.</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.1.0" date="2026-04-19">
       <description>
         <p>Initial release of Musik.</p>

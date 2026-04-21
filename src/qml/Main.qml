@@ -92,12 +92,12 @@ Kirigami.ApplicationWindow {
     }
 
     title: i18nc("@title:window", "Musik")
-    width: 344
-    height: (miniMode ? 240 : (Settings.showVolumeControls ? 570 : 530)) - (noHeaderMode ? 44 : 0)
-    minimumWidth: 344
-    maximumWidth: 344
-    minimumHeight: (miniMode ? 240 : (Settings.showVolumeControls ? 570 : 530)) - (noHeaderMode ? 44 : 0)
-    maximumHeight: (miniMode ? 240 : (Settings.showVolumeControls ? 570 : 530)) - (noHeaderMode ? 44 : 0)
+    width: 420
+    height: (miniMode ? 240 : (Settings.showVolumeControls ? 646 : 606)) - (noHeaderMode ? 44 : 0)
+    minimumWidth: 420
+    maximumWidth: 420
+    minimumHeight: (miniMode ? 240 : (Settings.showVolumeControls ? 646 : 606)) - (noHeaderMode ? 44 : 0)
+    maximumHeight: (miniMode ? 240 : (Settings.showVolumeControls ? 646 : 606)) - (noHeaderMode ? 44 : 0)
     flags: Settings.noHeaderMode ? (Qt.Window | Qt.FramelessWindowHint) : Qt.Window
 
     Controls.Menu {
@@ -129,8 +129,8 @@ Kirigami.ApplicationWindow {
             text: i18nc("@action", "Show volume controls")
             icon.name: "audio-volume-high"
             checkable: true
-            checked: Settings.showVolumeControls && !Settings.miniMode && !Settings.noHeaderMode
-            enabled: !Settings.miniMode && !Settings.noHeaderMode
+            checked: Settings.showVolumeControls && !Settings.miniMode
+            enabled: !Settings.miniMode
             onTriggered: Settings.showVolumeControls = checked
         }
 
@@ -333,6 +333,9 @@ Kirigami.ApplicationWindow {
     // Supported audio extensions for drag-and-drop validation
     readonly property var audioExtensions: [".mp3", ".flac", ".ogg", ".wav", ".m4a", ".aac", ".wma", ".opus"]
 
+    // True when the About page is open in the layer stack
+    readonly property bool aboutPageActive: pageStack.layers.depth > 1
+
     // Check if a file has a supported audio extension
     function isAudioFile(filePath) {
         var path = filePath.toString().toLowerCase();
@@ -426,11 +429,11 @@ Kirigami.ApplicationWindow {
         }
 
         onMetadataChanged: {
-            MprisController.title = audioPlayer.title
-            MprisController.artist = audioPlayer.artist
-            MprisController.album = audioPlayer.album
-            MprisController.albumArtUrl = audioPlayer.albumArtPath
-            MprisController.updateMetadata()
+            MprisController.title = audioPlayer.title;
+            MprisController.artist = audioPlayer.artist;
+            MprisController.album = audioPlayer.album;
+            MprisController.albumArtUrl = audioPlayer.albumArtPath;
+            MprisController.updateMetadata();
         }
     }
 
@@ -484,8 +487,8 @@ Kirigami.ApplicationWindow {
                 text: i18nc("@action", "Show volume controls")
                 icon.name: "audio-volume-high"
                 checkable: true
-                checked: Settings.showVolumeControls && !Settings.miniMode && !Settings.noHeaderMode
-                enabled: !Settings.miniMode && !Settings.noHeaderMode
+                checked: Settings.showVolumeControls && !Settings.miniMode
+                enabled: !Settings.miniMode
                 onToggled: Settings.showVolumeControls = checked
             },
             Kirigami.Action {
@@ -1111,8 +1114,8 @@ Kirigami.ApplicationWindow {
                 // Album Art Area
                 Item {
                     Layout.alignment: Qt.AlignHCenter
-                    Layout.preferredWidth: 280
-                    Layout.preferredHeight: 280
+                    Layout.preferredWidth: 356
+                    Layout.preferredHeight: 356
                     visible: !miniMode
 
                     Rectangle {

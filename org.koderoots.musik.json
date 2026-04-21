@@ -11,18 +11,13 @@
     "--socket=pulseaudio",
     "--device=dri",
     "--filesystem=xdg-music:ro",
-    "--filesystem=xdg-download:ro",
-    "--talk-name=org.mpris.MediaPlayer2",
-    "--own-name=org.mpris.MediaPlayer2.musik"
+    "--filesystem=xdg-download:ro"
   ],
   "modules": [
     {
       "name": "musik",
       "buildsystem": "cmake-ninja",
-      "config-opts": [
-        "-DCMAKE_BUILD_TYPE=Release",
-        "-DCMAKE_INSTALL_PREFIX=/app"
-      ],
+      "config-opts": ["-DCMAKE_BUILD_TYPE=Release"],
       "builddir": true,
       "sources": [
         {
