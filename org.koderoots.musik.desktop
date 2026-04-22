@@ -2,7 +2,7 @@
 Name=Musik
 GenericName=Audio Player
 Comment=A simple audio player
-Exec=musik %U
+Exec=musik %f
 MimeType=audio/mpeg;audio/flac;audio/ogg;audio/x-wav;audio/mp4;audio/aac;audio/x-ms-wma;audio/opus;audio/mpegurl;audio/vnd.rn-realaudio;audio/x-mpegurl;audio/x-musepack;audio/x-pn-realaudio;audio/x-scpls;audio/x-speex;
 Icon=org.koderoots.musik
 Type=Application
