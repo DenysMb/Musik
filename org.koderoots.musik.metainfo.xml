@@ -56,6 +56,11 @@
   </screenshots>
 
   <releases>
+    <release version="0.1.2" date="2026-04-22">
+      <description>
+        <p>Adjust desktop file exec from %U to %f.</p>
+      </description>
+    </release>
     <release version="0.1.1" date="2026-04-21">
       <description>
         <p>Bug fix release.</p>

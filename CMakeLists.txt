@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(musik VERSION 0.1.1)
+project(musik VERSION 0.1.2)
 
 set(QT_QML_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/src)
 
